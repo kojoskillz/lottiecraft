@@ -76,12 +76,35 @@ export default function HomeScreen() {
 
   return (
     <LinearGradient
-      colors={['#FFFFFF', '#F5F7FA']}
+      colors={["#FFFFFF", "#F5F7FA"]}
       style={styles.container}
     >
-      <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
+      {/* Background accent gradients */}
+      <LinearGradient
+        pointerEvents="none"
+        colors={["rgba(99,102,241,0.18)", "rgba(99,102,241,0)"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.bgBlobTopLeft}
+      />
+      <LinearGradient
+        pointerEvents="none"
+        colors={["rgba(16,185,129,0.12)", "rgba(16,185,129,0)"]}
+        start={{ x: 1, y: 1 }}
+        end={{ x: 0, y: 0 }}
+        style={styles.bgBlobBottomRight}
+      />
+
+      <Animated.View style={[styles.content, { opacity: fadeAnim }]}> 
         {/* Animated Image Carousel */}
-        <Animated.View style={[styles.illustrationContainer, { transform: [{ translateY: slideUpAnim }] }]}>
+        <Animated.View style={[styles.illustrationContainer, { transform: [{ translateY: slideUpAnim }] }]}> 
+          {/* Glowing hero orb behind the rotating illustrations */}
+          <LinearGradient 
+            colors={["rgba(99,102,241,0.25)", "rgba(99,102,241,0)"]}
+            start={{ x: 0.2, y: 0 }}
+            end={{ x: 0.8, y: 1 }}
+            style={styles.heroOrb}
+          />
           {images.map((img, index) => (
             <Animated.Image
               key={index}
@@ -106,26 +129,45 @@ export default function HomeScreen() {
         
         <Animated.View style={{ transform: [{ translateY: slideUpAnim }] }}>
           <Link href="/generator" asChild>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Start Generating Notes</Text>
-              <Ionicons name="arrow-forward" size={20} color="white" />
+            <TouchableOpacity activeOpacity={0.9} style={styles.buttonOuter}>
+              <LinearGradient
+                colors={["#6366F1", "#8B5CF6"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.buttonGradient}
+              >
+                <Text style={styles.buttonText}>Start Generating Notes</Text>
+                <Ionicons name="arrow-forward" size={20} color="white" />
+              </LinearGradient>
             </TouchableOpacity>
           </Link>
         </Animated.View>
         
-        <Animated.View style={[styles.featuresContainer, { transform: [{ translateY: slideUpAnim }] }]}>
-          <View style={styles.featureItem}>
-            <Ionicons name="bulb-outline" size={24} color="#6366F1" />
-            <Text style={styles.featureText}>AI-Powered</Text>
-          </View>
-          <View style={styles.featureItem}>
-            <Ionicons name="time-outline" size={24} color="#6366F1" />
-            <Text style={styles.featureText}>Save Time</Text>
-          </View>
-          <View style={styles.featureItem}>
-            <Ionicons name="school-outline" size={24} color="#6366F1" />
-            <Text style={styles.featureText}>Reliable</Text>
-          </View>
+        <Animated.View style={[styles.featuresContainer, { transform: [{ translateY: slideUpAnim }] }]}> 
+          <LinearGradient colors={["#EEF2FF", "#FFFFFF"]} start={{x:0, y:0}} end={{x:1, y:1}} style={styles.featureCardOuter}>
+            <View style={styles.featureCard}>
+              <View style={styles.featureIconWrap}>
+                <Ionicons name="bulb-outline" size={16} color="#6366F1" />
+              </View>
+              <Text style={styles.featureTitle}>AI-Powered</Text>
+            </View>
+          </LinearGradient>
+          <LinearGradient colors={["#EEF2FF", "#FFFFFF"]} start={{x:0, y:0}} end={{x:1, y:1}} style={styles.featureCardOuter}>
+            <View style={styles.featureCard}>
+              <View style={styles.featureIconWrap}>
+                <Ionicons name="time-outline" size={16} color="#6366F1" />
+              </View>
+              <Text style={styles.featureTitle}>Save Time</Text>
+            </View>
+          </LinearGradient>
+          <LinearGradient colors={["#EEF2FF", "#FFFFFF"]} start={{x:0, y:0}} end={{x:1, y:1}} style={styles.featureCardOuter}>
+            <View style={styles.featureCard}>
+              <View style={styles.featureIconWrap}>
+                <Ionicons name="school-outline" size={16} color="#6366F1" />
+              </View>
+              <Text style={styles.featureTitle}>Reliable</Text>
+            </View>
+          </LinearGradient>
         </Animated.View>
       </Animated.View>
     </LinearGradient>
@@ -136,20 +178,47 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 2,
+    paddingHorizontal: 24,
+    paddingVertical: 32,
   },
   content: {
     alignItems: 'center',
   },
+  bgBlobTopLeft: {
+    position: 'absolute',
+    top: -80,
+    left: -80,
+    width: 220,
+    height: 220,
+    borderRadius: 110,
+  },
+  bgBlobBottomRight: {
+    position: 'absolute',
+    bottom: -80,
+    right: -80,
+    width: 260,
+    height: 260,
+    borderRadius: 130,
+  },
   illustrationContainer: {
-    marginBottom: 10,
-    width: 200,
-    height: 200,
+    marginBottom: 16,
+    width: 240,
+    height: 240,
     position: 'relative',
   },
   illustration: {
-    width: 180,
-    height: 180,
+    width: 220,
+    height: 220,
+  },
+  heroOrb: {
+    position: 'absolute',
+    width: 240,
+    height: 240,
+    borderRadius: 120,
+    shadowColor: '#6366F1',
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.25,
+    shadowRadius: 24,
   },
   welcomeText: {
     fontSize: 22,
@@ -160,45 +229,48 @@ const styles = StyleSheet.create({
     marginBottom: -5,
   },
   appName: {
-    fontSize: 42,
+    fontSize: 44,
     fontWeight: '800',
     color: '#6366F1',
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: 12,
     letterSpacing: 1,
     textShadowColor: 'rgba(99, 102, 241, 0.2)',
     textShadowOffset: { width: 0, height: 4 },
     textShadowRadius: 8,
   },
   divider: {
-    width: 80,
+    width: 90,
     height: 4,
     backgroundColor: '#E2E8F0',
     borderRadius: 2,
     marginBottom: 20,
   },
   subtitle: {
-    fontSize: 16,
-    color: '#64748B',
+    fontSize: 17,
+    color: '#475569',
     textAlign: 'center',
-    marginBottom: 40,
-    maxWidth: 300,
-    lineHeight: 24,
+    marginBottom: 36,
+    maxWidth: 340,
+    lineHeight: 26,
     letterSpacing: 0.3,
   },
-  button: {
+  buttonOuter: {
+    borderRadius: 14,
+    overflow: 'hidden',
+    marginBottom: 36,
+    shadowColor: '#6366F1',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.35,
+    shadowRadius: 20,
+    elevation: 6,
+  },
+  buttonGradient: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#6366F1',
     paddingVertical: 16,
-    paddingHorizontal: 32,
-    borderRadius: 12,
-    marginBottom: 40,
-    shadowColor: '#6366F1',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.25,
-    shadowRadius: 12,
-    elevation: 5,
+    paddingHorizontal: 28,
+    borderRadius: 14,
   },
   buttonText: {
     color: 'white',
@@ -209,22 +281,45 @@ const styles = StyleSheet.create({
   },
   featuresContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     width: '100%',
-    maxWidth: 400,
-    marginTop: 10,
+    maxWidth: 360,
+    marginTop: 6,
+    marginBottom: 28,
   },
-  featureItem: {
+  featureCardOuter: {
+    borderRadius: 14,
+    padding: 1,
+    width: '31%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  featureCard: {
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    borderRadius: 13,
+    borderWidth: 1,
+    borderColor: 'rgba(99,102,241,0.12)',
     alignItems: 'center',
-    marginHorizontal: 12,
-    width: 100,
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 8,
   },
-  featureText: {
-    color: '#475569',
-    marginTop: 8,
-    fontSize: 13,
-    fontWeight: '600',
-    textAlign: 'center',
+  featureIconWrap: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#EEF2FF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+  featureTitle: {
+    color: '#334155',
+    fontSize: 12,
+    fontWeight: '700',
     letterSpacing: 0.3,
   },
 });
