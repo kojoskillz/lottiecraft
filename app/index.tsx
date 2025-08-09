@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
   },
   appName: {
     fontSize: 44,
-    fontWeight: '800',
+    fontFamily: 'SpaceGrotesk_700Bold',
     color: '#6366F1',
     textAlign: 'center',
     marginBottom: 12,
