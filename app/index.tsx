@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Animated, Image, Easing } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing } from 'react-native';
 import { Link } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -14,6 +14,8 @@ export default function HomeScreen() {
     require('../assets/images/undraw_teacher_s628.png'),
     require('../assets/images/undraw_to-do-list_eoia.png')
   ];
+  const fadeDuration = 1000;
+  const holdDuration = 2000;
 
   useEffect(() => {
     // Entry animations
@@ -30,30 +32,33 @@ export default function HomeScreen() {
       })
     ]).start();
 
-    // Image carousel animation
+    // Image carousel animation with 1s fade + 2s hold per image
     Animated.loop(
       Animated.sequence([
+        Animated.delay(holdDuration),
         Animated.timing(imageAnim, {
           toValue: 1,
-          duration: 2000,
+          duration: fadeDuration,
           easing: Easing.linear,
           useNativeDriver: true,
         }),
+        Animated.delay(holdDuration),
         Animated.timing(imageAnim, {
           toValue: 2,
-          duration: 2000,
+          duration: fadeDuration,
           easing: Easing.linear,
           useNativeDriver: true,
         }),
+        Animated.delay(holdDuration),
         Animated.timing(imageAnim, {
           toValue: 0,
-          duration: 2000,
+          duration: fadeDuration,
           easing: Easing.linear,
           useNativeDriver: true,
         })
       ])
     ).start();
-  }, []);
+  }, [fadeAnim, imageAnim, slideUpAnim]);
 
   const getImageStyle = (index) => {
     const opacity = imageAnim.interpolate({
