@@ -12,7 +12,8 @@ import {
   Platform,
   Image,
   Modal,
-  FlatList
+  FlatList,
+  ActivityIndicator
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -91,6 +92,52 @@ const lessonNumbers = [
   { id: '21', name: '6 of 6' },
 ];
 
+const terms = [
+  { id: '1', name: 'Term 1' },
+  { id: '2', name: 'Term 2' },
+  { id: '3', name: 'Term 3' },
+  { id: '4', name: 'Semester 1' },
+  { id: '5', name: 'Semester 2' },
+];
+
+const weeksList = Array.from({ length: 16 }, (_, i) => ({
+  id: String(i + 1),
+  name: `Week ${i + 1}`,
+}));
+
+const modelOptions = [
+  { id: 'gpt-4o-mini', name: 'gpt-4o-mini (OpenAI)' },
+  { id: 'gpt-4o', name: 'gpt-4o (OpenAI)' },
+  { id: 'llama-3.1-8b-instruct', name: 'llama-3.1-8b-instruct (Groq)' },
+  { id: 'llama-3.1-70b-instruct', name: 'llama-3.1-70b-instruct (Groq)' },
+];
+
+// Maps a given date to a term (1–3) and week (1–16) based on a start date for the academic year.
+// Adjust 'ACADEMIC_YEAR_START' to the first Monday (or relevant start) of your school year.
+const ACADEMIC_YEAR_START = new Date(new Date().getFullYear(), 0, 8); // Example: Jan 8 of current year
+
+function computeTermAndWeekFromDate(dateString: string) {
+  try {
+    const date = new Date(dateString);
+    const start = new Date(ACADEMIC_YEAR_START);
+    const msInWeek = 7 * 24 * 60 * 60 * 1000;
+    const diffMs = date.setHours(0,0,0,0) - start.setHours(0,0,0,0);
+    if (diffMs < 0) return { term: '', week: '' };
+    const weekIndex = Math.floor(diffMs / msInWeek); // 0-based
+    const weekNumber = Math.min(weekIndex + 1, 16); // cap to 16
+    let termNumber = 1;
+    if (weekNumber >= 1 && weekNumber <= 16) {
+      // Simple mapping: weeks 1-16 belong to a single term window.
+      // If your year spans three terms consecutively, uncomment below and set proper cutoffs.
+      // termNumber = weekNumber <= 16 ? 1 : weekNumber <= 32 ? 2 : 3;
+      termNumber = 1;
+    }
+    return { term: `Term ${termNumber}`, week: `Week ${weekNumber}` };
+  } catch {
+    return { term: '', week: '' };
+  }
+}
+
 export default function GeneratorScreen() {
   const [weekEnding, setWeekEnding] = useState('');
   const [day, setDay] = useState('');
@@ -98,6 +145,8 @@ export default function GeneratorScreen() {
   const [showSubjectModal, setShowSubjectModal] = useState(false);
   const [showClassModal, setShowClassModal] = useState(false);
   const [showCoreCompetenciesModal, setShowCoreCompetenciesModal] = useState(false);
+  const [showTermModal, setShowTermModal] = useState(false);
+  const [showWeekModal, setShowWeekModal] = useState(false);
   const [subject, setSubject] = useState('');
   const [duration, setDuration] = useState('');
   const [classLevel, setClassLevel] = useState('');
@@ -115,6 +164,15 @@ export default function GeneratorScreen() {
   const [reflectionActivities, setReflectionActivities] = useState('');
   const [resources, setResources] = useState('');
   const [assessmentQuestions, setAssessmentQuestions] = useState('');
+  const [isGeneratingNewLearning, setIsGeneratingNewLearning] = useState(false);
+  const [showAIOptionsModal, setShowAIOptionsModal] = useState(false);
+  const [showModelModal, setShowModelModal] = useState(false);
+  const [aiTone, setAiTone] = useState<'Simple' | 'Engaging' | 'Rigorous'>('Engaging');
+  const [aiCount, setAiCount] = useState<5 | 6 | 7 | 8>(7);
+  const [aiTemperature, setAiTemperature] = useState<0.4 | 0.6 | 0.8>(0.6);
+  const [aiModel, setAiModel] = useState<string>('gpt-4o-mini');
+  const [term, setTerm] = useState('');
+  const [week, setWeek] = useState('');
 
   const [showCalendar, setShowCalendar] = useState(false);
   const [activeTab, setActiveTab] = useState('create');
@@ -123,6 +181,10 @@ export default function GeneratorScreen() {
 
   const handleDateSelect = (day) => {
     setWeekEnding(day.dateString);
+    // Auto-fill term and week from selected date
+    const tw = computeTermAndWeekFromDate(day.dateString);
+    if (!term && tw.term) setTerm(tw.term);
+    if (!week && tw.week) setWeek(tw.week);
     setShowCalendar(false);
   };
 
@@ -155,7 +217,25 @@ export default function GeneratorScreen() {
     setShowLessonNumberModal(false);
   };
 
+  const selectTerm = (selectedTerm) => {
+    setTerm(selectedTerm);
+    setShowTermModal(false);
+  };
+
+  const selectWeek = (selectedWeek) => {
+    setWeek(selectedWeek);
+    setShowWeekModal(false);
+  };
+
   const generateLessonNote = () => {
+    if (!term) {
+      Alert.alert('Error', 'Please select term');
+      return;
+    }
+    if (!week) {
+      Alert.alert('Error', 'Please select week');
+      return;
+    }
     if (!weekEnding) {
       Alert.alert('Error', 'Please select week ending date');
       return;
@@ -182,6 +262,8 @@ export default function GeneratorScreen() {
     }
 
     const lesson = {
+      term,
+      week,
       weekEnding,
       day,
       subject,
@@ -206,6 +288,101 @@ export default function GeneratorScreen() {
     setActiveTab('preview');
   };
 
+  const normalizeActivitiesText = (raw: string) => {
+    return raw
+      .split(/\r?\n/)
+      .map((line) => line.replace(/^\s*([\-\*\u2022]|\d+\.|\d+\)|\([a-zA-Z]\))\s*/,'').trim())
+      .filter(Boolean)
+      .join('\n');
+  };
+
+  const generateNewLearningWithAI = async () => {
+    try {
+      if (!subject.trim() || !classLevel.trim() || !subStrand.trim()) {
+        Alert.alert('Missing info', 'Please provide at least Subject, Class, and Sub-Strand to generate activities.');
+        return;
+      }
+      const groqKey = process.env.EXPO_PUBLIC_GROQ_API_KEY as string | undefined;
+      const openaiKey = process.env.EXPO_PUBLIC_OPENAI_API_KEY as string | undefined;
+      const usingGroq = Boolean(groqKey);
+      const usingOpenAI = !usingGroq && Boolean(openaiKey);
+      if (!usingGroq && !usingOpenAI) {
+        Alert.alert('Missing API key', 'Set EXPO_PUBLIC_GROQ_API_KEY (recommended, free tier) or EXPO_PUBLIC_OPENAI_API_KEY before starting the app.');
+        return;
+      }
+
+      setIsGeneratingNewLearning(true);
+
+      const systemPrompt = 'You are an expert primary school lesson planner. Generate concrete, student-centered classroom activities for PHASE 2: NEW LEARNING. Keep steps practical and age-appropriate.';
+      const userPrompt = `Create PHASE 2: NEW LEARNING activities.
+Context:
+- Term: ${term || '-'}
+- Week: ${week || '-'}
+- Week Ending: ${weekEnding || '-'}
+- Day: ${day || '-'}
+- Subject: ${subject}
+- Class: ${classLevel || '-'} (Class Size: ${classSize || '-'})
+- Duration: ${duration || '-'}
+- Strand: ${strand || '-'}
+- Sub-Strand/Topic: ${subStrand}
+- Content Standard: ${contentStandard || '-'}
+- Indicator: ${indicator || '-'}
+- Performance Indicator: ${performanceIndicator || '-'}
+- Core Competencies: ${coreCompetencies || '-'}
+- Available Resources: ${resources || '-'}
+
+Instructions:
+- Tone: ${aiTone}
+- Produce exactly ${aiCount} specific activities for the NEW LEARNING phase.
+- Use clear, simple sentences. Mention group/pair work where helpful.
+- Incorporate short checks for understanding.
+- If resources are provided, use them.
+- Output format: Only the activities, one per line, no numbering or bullets.`;
+
+      const baseUrl = usingGroq ? 'https://api.groq.com/openai/v1/chat/completions' : 'https://api.openai.com/v1/chat/completions';
+      let chosenModel = aiModel;
+      if (usingGroq && /^gpt/i.test(chosenModel)) {
+        chosenModel = 'llama-3.1-8b-instruct';
+      }
+      if (usingOpenAI && /^llama/i.test(chosenModel)) {
+        chosenModel = 'gpt-4o-mini';
+      }
+      const authToken = usingGroq ? groqKey! : openaiKey!;
+      const resp = await fetch(baseUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          model: chosenModel,
+          temperature: aiTemperature,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt },
+          ],
+        }),
+      });
+
+      if (!resp.ok) {
+        const errText = await resp.text();
+        throw new Error(errText || `Request failed: ${resp.status}`);
+      }
+      const data = await resp.json();
+      const content = data?.choices?.[0]?.message?.content || '';
+      const normalized = normalizeActivitiesText(content);
+      if (!normalized) {
+        Alert.alert('No content', 'AI did not return any activities. Please try again.');
+      }
+      setNewLearningActivities(normalized);
+    } catch (e) {
+      console.error('AI generation error:', e);
+      Alert.alert('AI Error', 'Failed to generate activities. Please try again.');
+    } finally {
+      setIsGeneratingNewLearning(false);
+    }
+  };
+
   const generateHTML = () => {
     if (!generatedLesson) return '';
     
@@ -223,9 +400,9 @@ export default function GeneratorScreen() {
           </style>
         </head>
         <body>
-          <h1>FIRST TERM</h1>
+          <h1>${generatedLesson.term?.toUpperCase() || ''}</h1>
           <h2>WEEKLY LESSON NOTES</h2>
-          <h3>WEEK 1</h3>
+          <h3>${generatedLesson.week?.toUpperCase() || ''}</h3>
           
           <table>
             <tr>
@@ -235,6 +412,12 @@ export default function GeneratorScreen() {
               <td>${generatedLesson.day}</td>
               <th>Subject:</th>
               <td>${generatedLesson.subject}</td>
+            </tr>
+            <tr>
+              <th>Term:</th>
+              <td>${generatedLesson.term}</td>
+              <th>Week:</th>
+              <td colspan="3">${generatedLesson.week}</td>
             </tr>
             <tr>
               <th>Duration:</th>
@@ -380,11 +563,45 @@ export default function GeneratorScreen() {
     }
   };
 
-  const CreateTab = () => (
-    <ScrollView 
-      contentContainerStyle={styles.scrollContainer}
-      keyboardShouldPersistTaps="handled"
-    >
+  const clearAllInputs = () => {
+    setTerm('');
+    setWeek('');
+    setWeekEnding('');
+    setDay('');
+    setSubject('');
+    setDuration('');
+    setClassLevel('');
+    setClassSize('');
+    setStrand('');
+    setSubStrand('');
+    setContentStandard('');
+    setIndicator('');
+    setLessonNumber('');
+    setPerformanceIndicator('');
+    setCoreCompetencies('');
+    setReferences('');
+    setStarterActivities('');
+    setNewLearningActivities('');
+    setReflectionActivities('');
+    setResources('');
+    setAssessmentQuestions('');
+    setGeneratedLesson(null);
+    setActiveTab('create');
+  };
+
+  const CreateTab = () => {
+    const hasAnyInput = Boolean(
+      term || week || weekEnding || day || subject || duration || classLevel || classSize ||
+      strand || subStrand || contentStandard || indicator || lessonNumber || performanceIndicator ||
+      coreCompetencies || references || starterActivities || newLearningActivities ||
+      reflectionActivities || resources || assessmentQuestions
+    );
+    return (
+      <ScrollView 
+        contentContainerStyle={styles.scrollContainer}
+        keyboardShouldPersistTaps="handled"
+      >
+        {/* Top clear button removed; moved near Generate button below */}
       <View style={styles.header}>
         <Image 
           // source={require('../assets/lesson-plan-icon.png')} 
@@ -396,6 +613,32 @@ export default function GeneratorScreen() {
 
       <View style={styles.card}>
         <Text style={styles.sectionTitle}>Basic Information</Text>
+        <View style={styles.row}>
+          <View style={styles.col}>
+            <Text style={styles.label}>Term</Text>
+            <TouchableOpacity 
+              style={styles.dateInput} 
+              onPress={() => setShowTermModal(true)}
+            >
+              <Text style={term ? styles.dateText : styles.placeholderText}>
+                {term || 'Select term'}
+              </Text>
+              <Ionicons name="chevron-down" size={20} color="#6366F1" />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.col}>
+            <Text style={styles.label}>Week</Text>
+            <TouchableOpacity 
+              style={styles.dateInput} 
+              onPress={() => setShowWeekModal(true)}
+            >
+              <Text style={week ? styles.dateText : styles.placeholderText}>
+                {week || 'Select week'}
+              </Text>
+              <Ionicons name="chevron-down" size={20} color="#6366F1" />
+            </TouchableOpacity>
+          </View>
+        </View>
         
         <View style={styles.row}>
           <View style={styles.col}>
@@ -677,7 +920,23 @@ export default function GeneratorScreen() {
           )}
         </View>
 
-        <Text style={styles.phaseTitle}>PHASE 2: NEW LEARNING</Text>
+        <View style={styles.phaseHeaderRow}>
+          <Text style={styles.phaseTitle}>PHASE 2: NEW LEARNING</Text>
+          <TouchableOpacity style={styles.aiGenButton} onPress={generateNewLearningWithAI} disabled={isGeneratingNewLearning}>
+            {isGeneratingNewLearning ? (
+              <ActivityIndicator size="small" color="#6366F1" />
+            ) : (
+              <>
+                <Ionicons name="sparkles-outline" size={14} color="#6366F1" />
+                <Text style={styles.aiGenButtonText}>Use AI</Text>
+              </>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.aiGenButton, { marginLeft: 8 }]} onPress={() => setShowAIOptionsModal(true)} disabled={isGeneratingNewLearning}>
+            <Ionicons name="options-outline" size={14} color="#6366F1" />
+            <Text style={styles.aiGenButtonText}>Options</Text>
+          </TouchableOpacity>
+        </View>
         <View style={{ position: 'relative' }}>
         <TextInput
           style={[styles.input, styles.multilineInput]}
@@ -764,15 +1023,275 @@ export default function GeneratorScreen() {
         </View>
       </View>
 
-      <View style={styles.generateButton}>
-        <TouchableOpacity onPress={generateLessonNote}>
-          <LinearGradient colors={["#6366F1", "#4F46E5"]} style={styles.gradientButton}>
-            <Text style={styles.generateButtonText}>Generate Lesson</Text>
-            <Ionicons name="arrow-forward-circle" size={20} color="white" />
+      <View style={styles.actionRow}>
+        <TouchableOpacity onPress={generateLessonNote} activeOpacity={0.9} style={styles.smallButton}>
+          <LinearGradient colors={["#6366F1", "#8B5CF6"]} start={{x:0,y:0}} end={{x:1,y:1}} style={styles.smallButtonInner}>
+            <Ionicons name="sparkles-outline" size={14} color="white" />
+            <Text style={styles.smallButtonText}>Generate</Text>
           </LinearGradient>
         </TouchableOpacity>
+        {hasAnyInput && (
+          <TouchableOpacity onPress={clearAllInputs} activeOpacity={0.9} style={styles.smallClearButton}>
+            <LinearGradient colors={["#FEE2E2", "#FECACA"]} start={{x:0,y:0}} end={{x:1,y:1}} style={styles.smallClearButtonInner}>
+              <Ionicons name="trash-outline" size={14} color="#DC2626" />
+              <Text style={styles.smallClearButtonText}>Clear</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        )}
       </View>
 
+      <Modal
+        visible={showTermModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowTermModal(false)}
+      >
+        <View style={{
+          flex: 1,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+          <View style={{
+            backgroundColor: 'white',
+            borderRadius: 12,
+            padding: 24,
+            width: '80%',
+            maxHeight: '70%',
+            elevation: 5,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+          }}>
+            <Text style={{
+              fontSize: 18,
+              fontWeight: 'bold',
+              color: '#0F172A',
+              marginBottom: 16,
+              textAlign: 'center',
+            }}>Select Term</Text>
+            <FlatList
+              data={terms}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={{
+                    padding: 16,
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#E5E7EB',
+                    alignItems: 'center',
+                  }}
+                  onPress={() => selectTerm(item.name)}
+                >
+                  <Text style={{ fontSize: 16, color: '#334155' }}>{item.name}</Text>
+                </TouchableOpacity>
+              )}
+            />
+            <TouchableOpacity
+              style={{
+                marginTop: 16,
+                padding: 12,
+                backgroundColor: '#F3F4F6',
+                borderRadius: 8,
+                alignItems: 'center',
+              }}
+              onPress={() => setShowTermModal(false)}
+            >
+              <Text style={{ fontSize: 16, color: '#EF4444', fontWeight: '600' }}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        visible={showAIOptionsModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowAIOptionsModal(false)}
+      >
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.35)', justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ backgroundColor: 'white', borderRadius: 12, width: '85%', padding: 16 }}>
+            <Text style={{ fontSize: 16, fontWeight: '700', color: '#0F172A', marginBottom: 12, textAlign: 'center' }}>
+              AI Options
+            </Text>
+            <View style={{ marginBottom: 10 }}>
+              <Text style={{ fontSize: 13, color: '#475569', marginBottom: 6 }}>Tone</Text>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                {(['Simple','Engaging','Rigorous'] as const).map((t) => (
+                  <TouchableOpacity key={t} onPress={() => setAiTone(t)} style={[styles.pill, aiTone === t && styles.pillActive]}>
+                    <Text style={[styles.pillText, aiTone === t && styles.pillTextActive]}>{t}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
+            <View style={{ marginBottom: 10 }}>
+              <Text style={{ fontSize: 13, color: '#475569', marginBottom: 6 }}>Number of activities</Text>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                {[5,6,7,8].map((n) => (
+                  <TouchableOpacity key={n} onPress={() => setAiCount(n as 5|6|7|8)} style={[styles.pill, aiCount === n && styles.pillActive]}>
+                    <Text style={[styles.pillText, aiCount === n && styles.pillTextActive]}>{n}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
+            <View style={{ marginBottom: 10 }}>
+              <Text style={{ fontSize: 13, color: '#475569', marginBottom: 6 }}>Creativity</Text>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                {([0.4,0.6,0.8] as const).map((temp) => (
+                  <TouchableOpacity key={temp} onPress={() => setAiTemperature(temp)} style={[styles.pill, aiTemperature === temp && styles.pillActive]}>
+                    <Text style={[styles.pillText, aiTemperature === temp && styles.pillTextActive]}>{temp}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
+            <View style={{ marginBottom: 16 }}>
+              <Text style={{ fontSize: 13, color: '#475569', marginBottom: 6 }}>Model</Text>
+              <TouchableOpacity onPress={() => setShowModelModal(true)} style={[styles.dateInput, { borderColor: '#C7D2FE', backgroundColor: '#EEF2FF' }]}>
+                <Text style={styles.dateText}>{modelOptions.find(m => m.id === aiModel)?.name || aiModel}</Text>
+                <Ionicons name="chevron-down" size={18} color="#6366F1" />
+              </TouchableOpacity>
+            </View>
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <TouchableOpacity onPress={() => setShowAIOptionsModal(false)} style={[styles.pill, { flex: 1, marginRight: 8, backgroundColor: '#F1F5F9', borderColor: '#E2E8F0' }]}>
+                <Text style={[styles.pillText, { color: '#334155' }]}>Close</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => { setShowAIOptionsModal(false); generateNewLearningWithAI(); }} style={[styles.pillActive, { flex: 1, marginLeft: 8 }]}>
+                <Text style={[styles.pillTextActive]}>Generate</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        visible={showModelModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowModelModal(false)}
+      >
+        <View style={{
+          flex: 1,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+          <View style={{
+            backgroundColor: 'white',
+            borderRadius: 12,
+            padding: 24,
+            width: '85%',
+            maxHeight: '70%',
+            elevation: 5,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+          }}>
+            <Text style={{
+              fontSize: 18,
+              fontWeight: 'bold',
+              color: '#0F172A',
+              marginBottom: 16,
+              textAlign: 'center',
+            }}>Select Model</Text>
+            <FlatList
+              data={modelOptions}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={{
+                    padding: 14,
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#E5E7EB',
+                  }}
+                  onPress={() => { setAiModel(item.id); setShowModelModal(false); }}
+                >
+                  <Text style={{ fontSize: 14, color: '#334155' }}>{item.name}</Text>
+                </TouchableOpacity>
+              )}
+            />
+            <TouchableOpacity
+              style={{
+                marginTop: 16,
+                padding: 12,
+                backgroundColor: '#F3F4F6',
+                borderRadius: 8,
+                alignItems: 'center',
+              }}
+              onPress={() => setShowModelModal(false)}
+            >
+              <Text style={{ fontSize: 16, color: '#EF4444', fontWeight: '600' }}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        visible={showWeekModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowWeekModal(false)}
+      >
+        <View style={{
+          flex: 1,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+          <View style={{
+            backgroundColor: 'white',
+            borderRadius: 12,
+            padding: 24,
+            width: '80%',
+            maxHeight: '70%',
+            elevation: 5,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+          }}>
+            <Text style={{
+              fontSize: 18,
+              fontWeight: 'bold',
+              color: '#0F172A',
+              marginBottom: 16,
+              textAlign: 'center',
+            }}>Select Week</Text>
+            <FlatList
+              data={weeksList}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={{
+                    padding: 16,
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#E5E7EB',
+                    alignItems: 'center',
+                  }}
+                  onPress={() => selectWeek(item.name)}
+                >
+                  <Text style={{ fontSize: 16, color: '#334155' }}>{item.name}</Text>
+                </TouchableOpacity>
+              )}
+            />
+            <TouchableOpacity
+              style={{
+                marginTop: 16,
+                padding: 12,
+                backgroundColor: '#F3F4F6',
+                borderRadius: 8,
+                alignItems: 'center',
+              }}
+              onPress={() => setShowWeekModal(false)}
+            >
+              <Text style={{ fontSize: 16, color: '#EF4444', fontWeight: '600' }}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
       <Modal
         visible={showDayModal}
         transparent={true}
@@ -1158,8 +1677,9 @@ export default function GeneratorScreen() {
           </View>
         </View>
       </Modal>
-    </ScrollView>
-  );
+      </ScrollView>
+    );
+  };
 
   const PreviewTab = () => (
     <ScrollView style={styles.previewContainer}>
@@ -1429,6 +1949,11 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingBottom: 24,
   },
+  topActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginBottom: 8,
+  },
   header: {
     marginBottom: 24,
     alignItems: 'center',
@@ -1530,16 +2055,118 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 12,
   },
-  generateButton: {
-    borderRadius: 12,
-    marginTop: 16,
-    overflow: 'hidden',
+  phaseHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  gradientButton: {
+  aiGenButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#C7D2FE',
+    backgroundColor: '#EEF2FF',
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+  },
+  aiGenButtonText: {
+    color: '#6366F1',
+    fontWeight: '700',
+    fontSize: 12,
+    marginLeft: 6,
+  },
+  actionRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
+    marginTop: 12,
+    marginBottom: 4,
+  },
+  smallButton: {
+    borderRadius: 999,
+    overflow: 'hidden',
+    marginHorizontal: 6,
+  },
+  smallButtonInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 999,
+  },
+  smallButtonText: {
+    color: 'white',
+    fontSize: 13,
+    fontWeight: '700',
+    marginLeft: 6,
+  },
+  clearButton: {
+    marginTop: 16,
+    marginLeft: 6,
+    borderRadius: 10,
+    overflow: 'hidden',
+    alignSelf: 'stretch',
+  },
+  clearButtonTop: {
+    marginTop: 0,
+    marginLeft: 0,
+    alignSelf: 'auto',
+  },
+  clearButtonInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#FCA5A5',
+  },
+  clearButtonInnerSmall: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#FCA5A5',
+  },
+  clearButtonText: {
+    color: '#DC2626',
+    fontWeight: '700',
+    fontSize: 12,
+    marginLeft: 6,
+  },
+  smallClearButton: {
+    borderRadius: 999,
+    overflow: 'hidden',
+    marginHorizontal: 6,
+  },
+  smallClearButtonInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 9,
+    paddingHorizontal: 14,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: '#FCA5A5',
+    backgroundColor: 'transparent',
+  },
+  smallClearButtonText: {
+    color: '#DC2626',
+    fontWeight: '700',
+    fontSize: 12,
+    marginLeft: 6,
+  },
+  clearButtonTextSmall: {
+    color: '#DC2626',
+    fontWeight: '700',
+    fontSize: 11,
+    marginLeft: 6,
   },
   generateButtonText: {
     color: 'white',
@@ -1659,6 +2286,34 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontWeight: '600',
     fontSize: 14,
+  },
+  pill: {
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#C7D2FE',
+    backgroundColor: '#EEF2FF',
+  },
+  pillActive: {
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#6366F1',
+    backgroundColor: '#6366F1',
+  },
+  pillText: {
+    color: '#6366F1',
+    fontWeight: '700',
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  pillTextActive: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 12,
+    textAlign: 'center',
   },
   editButton: {
     marginTop: 8,
