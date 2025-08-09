@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   View, 
   Text, 
@@ -1319,11 +1319,11 @@ export default function GeneratorScreen() {
   const renderContent = () => {
     switch (activeTab) {
       case 'create':
-        return <CreateTab />;
+        return CreateTab();
       case 'preview':
-        return <PreviewTab />;
+        return PreviewTab();
       default:
-        return <CreateTab />;
+        return CreateTab();
     }
   };
 
