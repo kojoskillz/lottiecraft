@@ -108,8 +108,7 @@ const weeksList = Array.from({ length: 16 }, (_, i) => ({
 const modelOptions = [
   { id: 'gpt-4o-mini', name: 'gpt-4o-mini (OpenAI)' },
   { id: 'gpt-4o', name: 'gpt-4o (OpenAI)' },
-  { id: 'llama-3.1-8b-instruct', name: 'llama-3.1-8b-instruct (Groq)' },
-  { id: 'llama-3.1-70b-instruct', name: 'llama-3.1-70b-instruct (Groq)' },
+  { id: 'llama3-8b-8192', name: 'llama3-8b-8192 (Groq)' },
 ];
 
 // Maps a given date to a term (1–3) and week (1–16) based on a start date for the academic year.
@@ -342,10 +341,14 @@ Instructions:
       const baseUrl = usingGroq ? 'https://api.groq.com/openai/v1/chat/completions' : 'https://api.openai.com/v1/chat/completions';
       let chosenModel = aiModel;
       if (usingGroq && /^gpt/i.test(chosenModel)) {
-        chosenModel = 'llama-3.1-8b-instruct';
+        chosenModel = 'llama3-8b-8192';
       }
       if (usingOpenAI && /^llama/i.test(chosenModel)) {
         chosenModel = 'gpt-4o-mini';
+      }
+      // Extra safety: any 70b or older llama names fall back to Groq's current 8b ID
+      if (usingGroq && (/70b/i.test(chosenModel) || /llama-?3\.1-?8b/i.test(chosenModel))) {
+        chosenModel = 'llama3-8b-8192';
       }
       const authToken = usingGroq ? groqKey! : openaiKey!;
       const resp = await fetch(baseUrl, {
@@ -2295,7 +2298,7 @@ const styles = StyleSheet.create({
     borderColor: '#C7D2FE',
     backgroundColor: '#EEF2FF',
   },
-  pillActive: {
+  pillActive: { 
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderRadius: 10,
