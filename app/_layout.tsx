@@ -4,29 +4,44 @@ import { SpaceGrotesk_700Bold } from '@expo-google-fonts/space-grotesk';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
-
-import React from 'react';
-import { useColorScheme } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { useColorScheme, View, ActivityIndicator } from 'react-native';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
+  const [fontsLoaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     SpaceGrotesk_700Bold,
   });
+  const [appReady, setAppReady] = useState(false);
+  const [splashAnimationComplete, setSplashAnimationComplete] = useState(false);
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
+  useEffect(() => {
+    if (fontsLoaded) {
+      // Simulate loading process (replace with actual async tasks if needed)
+      setTimeout(() => {
+        setAppReady(true);
+      }, 2000); // 2 second splash screen
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded || !appReady) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#7F40EF' }}>
+        <ActivityIndicator size="large" color="white" />
+      </View>
+    );
   }
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
+      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="home" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
-      <StatusBar style="auto" />
     </ThemeProvider>
   );
 }
