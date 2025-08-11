@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   View, 
@@ -604,427 +603,595 @@ Instructions:
         contentContainerStyle={styles.scrollContainer}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Top clear button removed; moved near Generate button below */}
-      <View style={styles.header}>
-        <Image 
-          // source={require('../assets/lesson-plan-icon.png')} 
-          style={styles.headerIcon}
-        />
-        <Text style={styles.title}>Create Weekly Lesson Note</Text>
-        <Text style={styles.subtitle}>Start creating your lesson plans</Text>
+<View style={styles.headerContainer}>
+  <LinearGradient 
+    colors={['#7C3AED', '#8B5CF6']} 
+    style={styles.headerGradient}
+    start={{ x: 0, y: 0 }}
+    end={{ x: 1, y: 1 }}
+  >
+    <View style={styles.headerContent}>
+      <View style={styles.headerIconContainer}>
+        <Ionicons name="book-outline" size={32} color="white" />
       </View>
+      <Text style={styles.headerTitle}>Create Weekly Lesson Note</Text>
+      <Text style={styles.headerSubtitle}>Plan engaging lessons for your students</Text>
+    </View>
+  </LinearGradient>
+  <View style={styles.headerCurve}></View>
+</View>
 
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>Basic Information</Text>
-        <View style={styles.row}>
-          <View style={styles.col}>
-            <Text style={styles.label}>Term</Text>
-            <TouchableOpacity 
-              style={styles.dateInput} 
-              onPress={() => setShowTermModal(true)}
-            >
-              <Text style={term ? styles.dateText : styles.placeholderText}>
-                {term || 'Select term'}
-              </Text>
-              <Ionicons name="chevron-down" size={20} color="#6366F1" />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.col}>
-            <Text style={styles.label}>Week</Text>
-            <TouchableOpacity 
-              style={styles.dateInput} 
-              onPress={() => setShowWeekModal(true)}
-            >
-              <Text style={week ? styles.dateText : styles.placeholderText}>
-                {week || 'Select week'}
-              </Text>
-              <Ionicons name="chevron-down" size={20} color="#6366F1" />
-            </TouchableOpacity>
-          </View>
+<View style={styles.sectionContainer}>
+  <View style={styles.sectionHeader}>
+    <View style={styles.sectionTitleContainer}>
+      <Ionicons name="information-circle" size={22} color="#7C3AED" />
+      <Text style={styles.sectionTitle}>Basic Information</Text>
+    </View>
+    <View style={styles.sectionDivider} />
+  </View>
+
+  <View style={styles.gridContainer}>
+    {/* Row 1 - Term and Week */}
+    <View style={styles.gridRow}>
+      <View style={styles.gridItem}>
+        <View style={styles.inputLabelContainer}>
+          <Ionicons name="school" size={16} color="#7C3AED" />
+          <Text style={styles.inputLabel}>Academic Term</Text>
         </View>
-        
-        <View style={styles.row}>
-          <View style={styles.col}>
-            <Text style={styles.label}>Week Ending</Text>
-            <TouchableOpacity 
-              style={styles.dateInput} 
-              onPress={toggleCalendar}
-            >
-              <Text style={weekEnding ? styles.dateText : styles.placeholderText}>
-                {weekEnding || 'Select date'}
-              </Text>
-              <Ionicons name="calendar" size={20} color="#6366F1" />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.col}>
-            <Text style={styles.label}>Day</Text>
-            <TouchableOpacity 
-              style={styles.dateInput} 
-              onPress={() => setShowDayModal(true)}
-            >
-              <Text style={day ? styles.dateText : styles.placeholderText}>
-                {day || 'Select day'}
-              </Text>
-              <Ionicons name="chevron-down" size={20} color="#6366F1" />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.row}>
-          <View style={styles.col}>
-            <Text style={styles.label}>Subject</Text>
-            <TouchableOpacity 
-              style={styles.dateInput} 
-              onPress={() => setShowSubjectModal(true)}
-            >
-              <Text style={subject ? styles.dateText : styles.placeholderText}>
-                {subject || 'Select subject'}
-              </Text>
-              <Ionicons name="chevron-down" size={20} color="#6366F1" />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.col}>
-            <Text style={styles.label}>Duration</Text>
-            <View style={{ position: 'relative' }}>
-            <TextInput
-              style={styles.input}
-                placeholder="E.g. 45mins"
-              placeholderTextColor="#94A3B8"
-              value={duration || ''}
-              onChangeText={setDuration}
-            />
-              {duration.length > 0 && (
-                <TouchableOpacity 
-                  style={{ position: 'absolute', right: 10, top: 10 }} 
-                  onPress={() => setDuration('')}
-                >
-                  <Ionicons name="close-circle" size={20} color="#94A3B8" />
-                </TouchableOpacity>
-              )}
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.row}>
-          <View style={styles.col}>
-            <Text style={styles.label}>Class</Text>
-            <TouchableOpacity 
-              style={styles.dateInput} 
-              onPress={() => setShowClassModal(true)}
-            >
-              <Text style={classLevel ? styles.dateText : styles.placeholderText}>
-                {classLevel || 'Select basic'}
-              </Text>
-              <Ionicons name="chevron-down" size={20} color="#6366F1" />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.col}>
-            <Text style={styles.label}>Class Size</Text>
-            <View style={{ position: 'relative' }}>
-            <TextInput
-              style={styles.input}
-              placeholder="E.g. 30"
-              placeholderTextColor="#94A3B8"
-              value={classSize || ''}
-              onChangeText={setClassSize}
-              keyboardType="numeric"
-            />
-              {classSize.length > 0 && (
-                <TouchableOpacity 
-                  style={{ position: 'absolute', right: 10, top: 10 }} 
-                  onPress={() => setClassSize('')}
-                >
-                  <Ionicons name="close-circle" size={20} color="#94A3B8" />
-                </TouchableOpacity>
-              )}
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.row}>
-          <View style={styles.col}>
-            <Text style={styles.label}>Strand</Text>
-            <View style={{ position: 'relative' }}>
-            <TextInput
-              style={styles.input}
-                placeholder="Type strand"
-              placeholderTextColor="#94A3B8"
-              value={strand || ''}
-              onChangeText={setStrand}
-            />
-              {strand.length > 0 && (
-                <TouchableOpacity 
-                  style={{ position: 'absolute', right: 10, top: 10 }} 
-                  onPress={() => setStrand('')}
-                >
-                  <Ionicons name="close-circle" size={20} color="#94A3B8" />
-                </TouchableOpacity>
-              )}
-            </View>
-          </View>
-          <View style={styles.col}>
-            <Text style={styles.label}>Sub-Strand</Text>
-            <View style={{ position: 'relative' }}>
-            <TextInput
-              style={styles.input}
-                placeholder="Type sub-strand"
-              placeholderTextColor="#94A3B8"
-              value={subStrand || ''}
-              onChangeText={setSubStrand}
-            />
-              {subStrand.length > 0 && (
-                <TouchableOpacity 
-                  style={{ position: 'absolute', right: 10, top: 10 }} 
-                  onPress={() => setSubStrand('')}
-                >
-                  <Ionicons name="close-circle" size={20} color="#94A3B8" />
-                </TouchableOpacity>
-              )}
-            </View>
-          </View>
-        </View>
-
-        
-      </View>
-
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>Curriculum Standards</Text>
-        
-        <Text style={styles.label}>Content Standard</Text>
-        <View style={{ position: 'relative' }}>
-        <TextInput
-          style={[styles.input, styles.multilineInput]}
-          placeholder="Enter content standard..."
-          placeholderTextColor="#94A3B8"
-          multiline
-            textAlignVertical="top"
-            value={contentStandard || ''}
-          onChangeText={setContentStandard}
-        />
-          {contentStandard.length > 0 && (
-            <TouchableOpacity 
-              style={{ position: 'absolute', right: 10, top: 10 }} 
-              onPress={() => setContentStandard('')}
-            >
-              <Ionicons name="close-circle" size={20} color="#94A3B8" />
-            </TouchableOpacity>
-          )}
-        </View>
-
-        <Text style={styles.label}>Indicator</Text>
-        <View style={{ position: 'relative' }}>
-        <TextInput
-          style={[styles.input, styles.multilineInput]}
-          placeholder="Enter indicator..."
-          placeholderTextColor="#94A3B8"
-          multiline
-            textAlignVertical="top"
-            value={indicator || ''}
-          onChangeText={setIndicator}
-        />
-          {indicator.length > 0 && (
-            <TouchableOpacity 
-              style={{ position: 'absolute', right: 10, top: 10 }} 
-              onPress={() => setIndicator('')}
-            >
-              <Ionicons name="close-circle" size={20} color="#94A3B8" />
-            </TouchableOpacity>
-          )}
-        </View>
-
-        <View style={styles.row}>
-          <View style={styles.col}>
-            <Text style={styles.label}>Lesson Number</Text>
-            <TouchableOpacity 
-              style={styles.dateInput} 
-              onPress={() => setShowLessonNumberModal(true)}
-            >
-              <Text style={lessonNumber ? styles.dateText : styles.placeholderText}>
-                {lessonNumber || 'Select lesson number'}
-              </Text>
-              <Ionicons name="chevron-down" size={20} color="#6366F1" />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <Text style={styles.label}>Performance Indicator</Text>
-        <View style={{ position: 'relative' }}>
-        <TextInput
-          style={[styles.input, styles.multilineInput]}
-          placeholder="Enter performance indicator..."
-          placeholderTextColor="#94A3B8"
-          multiline
-            textAlignVertical="top"
-            value={performanceIndicator || ''}
-          onChangeText={setPerformanceIndicator}
-        />
-          {performanceIndicator.length > 0 && (
-            <TouchableOpacity 
-              style={{ position: 'absolute', right: 10, top: 10 }} 
-              onPress={() => setPerformanceIndicator('')}
-            >
-              <Ionicons name="close-circle" size={20} color="#94A3B8" />
-            </TouchableOpacity>
-          )}
-        </View>
-
-        <Text style={styles.label}>Core Competencies</Text>
         <TouchableOpacity 
-          style={styles.dateInput} 
-          onPress={() => setShowCoreCompetenciesModal(true)}
+          style={styles.selectInput} 
+          onPress={() => setShowTermModal(true)}
         >
-          <Text style={coreCompetencies ? styles.dateText : styles.placeholderText}>
-            {coreCompetencies || 'Select core competency'}
+          <Ionicons name="calendar" size={18} color="#7C3AED" style={styles.inputIcon} />
+          <Text style={term ? styles.selectInputText : styles.selectInputPlaceholder}>
+            {term || 'Select term'}
           </Text>
-          <Ionicons name="chevron-down" size={20} color="#6366F1" />
+          <Ionicons name="chevron-down" size={16} color="#7C3AED" />
         </TouchableOpacity>
+      </View>
 
-        <Text style={styles.label}>References</Text>
-        <View style={{ position: 'relative' }}>
-        <TextInput
-          style={styles.input}
-          placeholder="E.g. Science Curriculum Pg."
-          placeholderTextColor="#94A3B8"
-          value={references || ''}
-          onChangeText={setReferences}
+      <View style={styles.gridItem}>
+        <View style={styles.inputLabelContainer}>
+          <Ionicons name="time" size={16} color="#7C3AED" />
+          <Text style={styles.inputLabel}>Week</Text>
+        </View>
+        <TouchableOpacity 
+          style={styles.selectInput} 
+          onPress={() => setShowWeekModal(true)}
+        >
+          <Ionicons name="calendar-number" size={18} color="#7C3AED" style={styles.inputIcon} />
+          <Text style={week ? styles.selectInputText : styles.selectInputPlaceholder}>
+            {week || 'Select week'}
+          </Text>
+          <Ionicons name="chevron-down" size={16} color="#7C3AED" />
+        </TouchableOpacity>
+      </View>
+    </View>
+
+    {/* Row 2 - Week Ending and Day */}
+    <View style={styles.gridRow}>
+      <View style={styles.gridItem}>
+        <View style={styles.inputLabelContainer}>
+          <Ionicons name="flag" size={16} color="#7C3AED" />
+          <Text style={styles.inputLabel}>Week Ending</Text>
+        </View>
+        <TouchableOpacity 
+          style={styles.selectInput} 
+          onPress={toggleCalendar}
+        >
+          <Ionicons name="calendar-outline" size={18} color="#7C3AED" style={styles.inputIcon} />
+          <Text style={weekEnding ? styles.selectInputText : styles.selectInputPlaceholder}>
+            {weekEnding || 'Select date'}
+          </Text>
+          <Ionicons name="chevron-down" size={16} color="#7C3AED" />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.gridItem}>
+        <View style={styles.inputLabelContainer}>
+          <Ionicons name="today" size={16} color="#7C3AED" />
+          <Text style={styles.inputLabel}>Day</Text>
+        </View>
+        <TouchableOpacity 
+          style={styles.selectInput} 
+          onPress={() => setShowDayModal(true)}
+        >
+          <Ionicons name="sunny" size={18} color="#7C3AED" style={styles.inputIcon} />
+          <Text style={day ? styles.selectInputText : styles.selectInputPlaceholder}>
+            {day || 'Select day'}
+          </Text>
+          <Ionicons name="chevron-down" size={16} color="#7C3AED" />
+        </TouchableOpacity>
+      </View>
+    </View>
+
+    {/* Row 3 - Subject and Duration */}
+    <View style={styles.gridRow}>
+      <View style={styles.gridItem}>
+        <View style={styles.inputLabelContainer}>
+          <Ionicons name="book" size={16} color="#7C3AED" />
+          <Text style={styles.inputLabel}>Subject</Text>
+        </View>
+        <TouchableOpacity 
+          style={styles.selectInput} 
+          onPress={() => setShowSubjectModal(true)}
+        >
+          <Ionicons name="library" size={18} color="#7C3AED" style={styles.inputIcon} />
+          <Text style={subject ? styles.selectInputText : styles.selectInputPlaceholder}>
+            {subject || 'Select subject'}
+          </Text>
+          <Ionicons name="chevron-down" size={16} color="#7C3AED" />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.gridItem}>
+        <View style={styles.inputLabelContainer}>
+          <Ionicons name="hourglass" size={16} color="#7C3AED" />
+          <Text style={styles.inputLabel}>Duration</Text>
+        </View>
+        <View style={styles.textInputContainer}>
+          <Ionicons name="time-outline" size={18} color="#7C3AED" style={styles.textInputIcon} />
+          <TextInput
+            style={styles.textInput}
+            placeholder="E.g. 45mins"
+            placeholderTextColor="#9CA3AF"
+            value={duration}
+            onChangeText={setDuration}
+          />
+          {duration.length > 0 && (
+            <TouchableOpacity 
+              style={styles.clearInputButton} 
+              onPress={() => setDuration('')}
+            >
+              <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+    </View>
+
+    {/* Row 4 - Class and Class Size */}
+    <View style={styles.gridRow}>
+      <View style={styles.gridItem}>
+        <View style={styles.inputLabelContainer}>
+          <Ionicons name="people" size={16} color="#7C3AED" />
+          <Text style={styles.inputLabel}>Class</Text>
+        </View>
+        <TouchableOpacity 
+          style={styles.selectInput} 
+          onPress={() => setShowClassModal(true)}
+        >
+          <Ionicons name="school-outline" size={18} color="#7C3AED" style={styles.inputIcon} />
+          <Text style={classLevel ? styles.selectInputText : styles.selectInputPlaceholder}>
+            {classLevel || 'Select class'}
+          </Text>
+          <Ionicons name="chevron-down" size={16} color="#7C3AED" />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.gridItem}>
+        <View style={styles.inputLabelContainer}>
+          <Ionicons name="person" size={16} color="#7C3AED" />
+          <Text style={styles.inputLabel}>Class Size</Text>
+        </View>
+        <View style={styles.textInputContainer}>
+          <Ionicons name="people-outline" size={18} color="#7C3AED" style={styles.textInputIcon} />
+          <TextInput
+            style={styles.textInput}
+            placeholder="E.g. 30"
+            placeholderTextColor="#9CA3AF"
+            value={classSize}
+            onChangeText={setClassSize}
+            keyboardType="numeric"
+          />
+          {classSize.length > 0 && (
+            <TouchableOpacity 
+              style={styles.clearInputButton} 
+              onPress={() => setClassSize('')}
+            >
+              <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+
+<View style={styles.sectionContainer}>
+  <View style={styles.sectionHeader}>
+    <View style={styles.sectionTitleContainer}>
+      <MaterialCommunityIcons name="file-document-edit" size={22} color="#7C3AED" />
+      <Text style={styles.sectionTitle}>Curriculum Standards</Text>
+    </View>
+    <View style={styles.sectionDivider} />
+  </View>
+
+  {/* Content Standard */}
+  <View style={styles.inputFieldContainer}>
+    <View style={styles.inputLabelContainer}>
+      <MaterialCommunityIcons name="format-list-checks" size={16} color="#7C3AED" />
+      <Text style={styles.inputLabel}>Content Standard</Text>
+    </View>
+    <View style={styles.textAreaContainer}>
+      <MaterialCommunityIcons 
+        name="text-box" 
+        size={18} 
+        color="#7C3AED" 
+        style={styles.textAreaIcon} 
+      />
+      <TextInput
+        style={styles.textAreaInput}
+        placeholder="Enter content standard..."
+        placeholderTextColor="#9CA3AF"
+        multiline
+        textAlignVertical="top"
+        value={contentStandard}
+        onChangeText={setContentStandard}
+      />
+      {contentStandard.length > 0 && (
+        <TouchableOpacity 
+          style={styles.clearTextAreaButton} 
+          onPress={() => setContentStandard('')}
+        >
+          <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+        </TouchableOpacity>
+      )}
+    </View>
+  </View>
+
+  {/* Indicator */}
+  <View style={styles.inputFieldContainer}>
+    <View style={styles.inputLabelContainer}>
+      <MaterialCommunityIcons name="chart-bar" size={16} color="#7C3AED" />
+      <Text style={styles.inputLabel}>Indicator</Text>
+    </View>
+    <View style={styles.textAreaContainer}>
+      <MaterialCommunityIcons 
+        name="cursor-text" 
+        size={18} 
+        color="#7C3AED" 
+        style={styles.textAreaIcon} 
+      />
+      <TextInput
+        style={styles.textAreaInput}
+        placeholder="Enter indicator..."
+        placeholderTextColor="#9CA3AF"
+        multiline
+        textAlignVertical="top"
+        value={indicator}
+        onChangeText={setIndicator}
+      />
+      {indicator.length > 0 && (
+        <TouchableOpacity 
+          style={styles.clearTextAreaButton} 
+          onPress={() => setIndicator('')}
+        >
+          <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+        </TouchableOpacity>
+      )}
+    </View>
+  </View>
+
+  {/* Lesson Number */}
+  <View style={styles.gridRow}>
+    <View style={[styles.gridItem, { flex: 1 }]}>
+      <View style={styles.inputLabelContainer}>
+        <MaterialCommunityIcons name="numeric" size={16} color="#7C3AED" />
+        <Text style={styles.inputLabel}>Lesson Number</Text>
+      </View>
+      <TouchableOpacity 
+        style={styles.selectInput} 
+        onPress={() => setShowLessonNumberModal(true)}
+      >
+        <MaterialCommunityIcons 
+          name="format-list-numbered" 
+          size={18} 
+          color="#7C3AED" 
+          style={styles.inputIcon} 
         />
-          {references.length > 0 && (
-            <TouchableOpacity 
-              style={{ position: 'absolute', right: 10, top: 10 }} 
-              onPress={() => setReferences('')}
-            >
-              <Ionicons name="close-circle" size={20} color="#94A3B8" />
-            </TouchableOpacity>
-          )}
-        </View>
+        <Text style={lessonNumber ? styles.selectInputText : styles.selectInputPlaceholder}>
+          {lessonNumber || 'Select lesson number'}
+        </Text>
+        <Ionicons name="chevron-down" size={16} color="#7C3AED" />
+      </TouchableOpacity>
+    </View>
+  </View>
+
+  {/* Performance Indicator */}
+  <View style={styles.inputFieldContainer}>
+    <View style={styles.inputLabelContainer}>
+      <MaterialCommunityIcons name="chart-line" size={16} color="#7C3AED" />
+      <Text style={styles.inputLabel}>Performance Indicator</Text>
+    </View>
+    <View style={styles.textAreaContainer}>
+      <MaterialCommunityIcons 
+        name="chart-areaspline" 
+        size={18} 
+        color="#7C3AED" 
+        style={styles.textAreaIcon} 
+      />
+      <TextInput
+        style={styles.textAreaInput}
+        placeholder="Enter performance indicator..."
+        placeholderTextColor="#9CA3AF"
+        multiline
+        textAlignVertical="top"
+        value={performanceIndicator}
+        onChangeText={setPerformanceIndicator}
+      />
+      {performanceIndicator.length > 0 && (
+        <TouchableOpacity 
+          style={styles.clearTextAreaButton} 
+          onPress={() => setPerformanceIndicator('')}
+        >
+          <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+        </TouchableOpacity>
+      )}
+    </View>
+  </View>
+
+  {/* Core Competencies */}
+  <View style={styles.inputFieldContainer}>
+    <View style={styles.inputLabelContainer}>
+      <MaterialCommunityIcons name="brain" size={16} color="#7C3AED" />
+      <Text style={styles.inputLabel}>Core Competencies</Text>
+    </View>
+    <TouchableOpacity 
+      style={styles.selectInput} 
+      onPress={() => setShowCoreCompetenciesModal(true)}
+    >
+      <MaterialCommunityIcons 
+        name="lightbulb-on" 
+        size={18} 
+        color="#7C3AED" 
+        style={styles.inputIcon} 
+      />
+      <Text style={coreCompetencies ? styles.selectInputText : styles.selectInputPlaceholder}>
+        {coreCompetencies || 'Select core competency'}
+      </Text>
+      <Ionicons name="chevron-down" size={16} color="#7C3AED" />
+    </TouchableOpacity>
+  </View>
+
+  {/* References */}
+  <View style={styles.inputFieldContainer}>
+    <View style={styles.inputLabelContainer}>
+      <MaterialCommunityIcons name="book-open-variant" size={16} color="#7C3AED" />
+      <Text style={styles.inputLabel}>References</Text>
+    </View>
+    <View style={styles.textInputContainer}>
+      <MaterialCommunityIcons 
+        name="bookmark" 
+        size={18} 
+        color="#7C3AED" 
+        style={styles.textInputIcon} 
+      />
+      <TextInput
+        style={styles.textInput}
+        placeholder="E.g. Science Curriculum Pg."
+        placeholderTextColor="#9CA3AF"
+        value={references}
+        onChangeText={setReferences}
+      />
+      {references.length > 0 && (
+        <TouchableOpacity 
+          style={styles.clearInputButton} 
+          onPress={() => setReferences('')}
+        >
+          <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+        </TouchableOpacity>
+      )}
+    </View>
+  </View>
+</View>
+
+<View style={styles.sectionContainer}>
+  {/* Lesson Phases Header */}
+  <View style={styles.sectionHeader}>
+    <View style={styles.sectionTitleContainer}>
+      <MaterialCommunityIcons name="progress-clock" size={22} color="#7C3AED" />
+      <Text style={styles.sectionTitle}>Lesson Phases</Text>
+    </View>
+    <View style={styles.sectionDivider} />
+  </View>
+
+  {/* PHASE 1: STARTER */}
+
+    <View style={styles.phaseHeader}>
+      <MaterialCommunityIcons name="play-circle" size={20} color="#7C3AED" />
+      <Text style={styles.phaseTitle}>PHASE 1: STARTER ACTIVITIES</Text>
+    </View>
+    <View style={styles.textAreaContainer}>
+      <MaterialCommunityIcons 
+        name="lightning-bolt" 
+        size={18} 
+        color="#7C3AED" 
+        style={styles.textAreaIcon} 
+      />
+      <TextInput
+        style={styles.textAreaInput}
+        placeholder="Enter starter activities (one per line)..."
+        placeholderTextColor="#9CA3AF"
+        multiline
+        textAlignVertical="top"
+        value={starterActivities}
+        onChangeText={setStarterActivities}
+      />
+      {starterActivities.length > 0 && (
+        <TouchableOpacity 
+          style={styles.clearTextAreaButton} 
+          onPress={() => setStarterActivities('')}
+        >
+          <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+        </TouchableOpacity>
+      )}
+    </View>
+
+
+  {/* PHASE 2: NEW LEARNING */}
+
+    <View style={[styles.phaseHeader]}>
+      <View style={styles.phaseHeaderLeft}>
+        <MaterialCommunityIcons name="book-education" size={20} color="#7C3AED" />
+        <Text style={styles.phaseTitle}>PHASE 2: NEW LEARNING</Text>
       </View>
-
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>Lesson Phases</Text>
-        
-        <Text style={styles.phaseTitle}>PHASE 1: STARTER</Text>
-        <View style={{ position: 'relative' }}>
-        <TextInput
-          style={[styles.input, styles.multilineInput]}
-          placeholder="Enter starter activities (one per line)..."
-          placeholderTextColor="#94A3B8"
-          multiline
-            textAlignVertical="top"
-            value={starterActivities || ''}
-            onChangeText={setStarterActivities}
-          />
-          {starterActivities.length > 0 && (
-            <TouchableOpacity 
-              style={{ position: 'absolute', right: 10, top: 10 }} 
-              onPress={() => setStarterActivities('')}
-            >
-              <Ionicons name="close-circle" size={20} color="#94A3B8" />
-            </TouchableOpacity>
+      <View style={styles.aiButtonsContainer}>
+        <TouchableOpacity 
+          style={styles.aiButton} 
+          onPress={generateNewLearningWithAI} 
+          disabled={isGeneratingNewLearning}
+        >
+          {isGeneratingNewLearning ? (
+            <ActivityIndicator size="small" color="#7C3AED" />
+          ) : (
+            <>
+              <Ionicons name="sparkles" size={14} color="#7C3AED" />
+              <Text style={styles.aiButtonText}>Generate</Text>
+            </>
           )}
-        </View>
-
-        <View style={styles.phaseHeaderRow}>
-          <Text style={styles.phaseTitle}>PHASE 2: NEW LEARNING</Text>
-          <TouchableOpacity style={styles.aiGenButton} onPress={generateNewLearningWithAI} disabled={isGeneratingNewLearning}>
-            {isGeneratingNewLearning ? (
-              <ActivityIndicator size="small" color="#6366F1" />
-            ) : (
-              <>
-                <Ionicons name="sparkles-outline" size={14} color="#6366F1" />
-                <Text style={styles.aiGenButtonText}>Use AI</Text>
-              </>
-            )}
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.aiGenButton, { marginLeft: 8 }]} onPress={() => setShowAIOptionsModal(true)} disabled={isGeneratingNewLearning}>
-            <Ionicons name="options-outline" size={14} color="#6366F1" />
-            <Text style={styles.aiGenButtonText}>Options</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{ position: 'relative' }}>
-        <TextInput
-          style={[styles.input, styles.multilineInput]}
-          placeholder="Enter new learning activities (one per line)..."
-          placeholderTextColor="#94A3B8"
-          multiline
-            textAlignVertical="top"
-            value={newLearningActivities || ''}
-            onChangeText={setNewLearningActivities}
-          />
-          {newLearningActivities.length > 0 && (
-            <TouchableOpacity 
-              style={{ position: 'absolute', right: 10, top: 10 }} 
-              onPress={() => setNewLearningActivities('')}
-            >
-              <Ionicons name="close-circle" size={20} color="#94A3B8" />
-            </TouchableOpacity>
-          )}
-        </View>
-
-        <Text style={styles.label}>Resources</Text>
-        <View style={{ position: 'relative' }}>
-        <TextInput
-          style={[styles.input, styles.multilineInput]}
-          placeholder="List resources separated by commas..."
-          placeholderTextColor="#94A3B8"
-          multiline
-            textAlignVertical="top"
-            value={resources || ''}
-          onChangeText={setResources}
-        />
-          {resources.length > 0 && (
-            <TouchableOpacity 
-              style={{ position: 'absolute', right: 10, top: 10 }} 
-              onPress={() => setResources('')}
-            >
-              <Ionicons name="close-circle" size={20} color="#94A3B8" />
-            </TouchableOpacity>
-          )}
-        </View>
-
-        <Text style={styles.phaseTitle}>PHASE 3: REFLECTION</Text>
-        <View style={{ position: 'relative' }}>
-        <TextInput
-          style={[styles.input, styles.multilineInput]}
-          placeholder="Enter reflection activities (one per line)..."
-          placeholderTextColor="#94A3B8"
-          multiline
-            textAlignVertical="top"
-            value={reflectionActivities || ''}
-            onChangeText={setReflectionActivities}
-          />
-          {reflectionActivities.length > 0 && (
-            <TouchableOpacity 
-              style={{ position: 'absolute', right: 10, top: 10 }} 
-              onPress={() => setReflectionActivities('')}
-            >
-              <Ionicons name="close-circle" size={20} color="#94A3B8" />
-            </TouchableOpacity>
-          )}
-        </View>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.aiOptionsButton} 
+          onPress={() => setShowAIOptionsModal(true)}
+        >
+          <Ionicons name="options" size={14} color="#7C3AED" />
+        </TouchableOpacity>
       </View>
+    </View>
+    <View style={styles.textAreaContainer}>
+      <MaterialCommunityIcons 
+        name="brain" 
+        size={18} 
+        color="#7C3AED" 
+        style={styles.textAreaIcon} 
+      />
+      <TextInput
+        style={styles.textAreaInput}
+        placeholder="Enter new learning activities (one per line)..."
+        placeholderTextColor="#9CA3AF"
+        multiline
+        textAlignVertical="top"
+        value={newLearningActivities}
+        onChangeText={setNewLearningActivities}
+      />
+      {newLearningActivities.length > 0 && (
+        <TouchableOpacity 
+          style={styles.clearTextAreaButton} 
+          onPress={() => setNewLearningActivities('')}
+        >
+          <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+        </TouchableOpacity>
+      )}
+    </View>
 
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>Assessment</Text>
-        <View style={{ position: 'relative' }}>
-        <TextInput
-          style={[styles.input, styles.multilineInput]}
-          placeholder="Enter assessment questions (one per line)..."
-          placeholderTextColor="#94A3B8"
-          multiline
-            textAlignVertical="top"
-            value={assessmentQuestions || ''}
-            onChangeText={setAssessmentQuestions}
-          />
-          {assessmentQuestions.length > 0 && (
-            <TouchableOpacity 
-              style={{ position: 'absolute', right: 10, top: 10 }} 
-              onPress={() => setAssessmentQuestions('')}
-            >
-              <Ionicons name="close-circle" size={20} color="#94A3B8" />
-            </TouchableOpacity>
-          )}
-        </View>
-      </View>
+
+  {/* Resources */}
+  <View style={styles.inputFieldContainer}>
+    <View style={styles.inputLabelContainer}>
+      <MaterialCommunityIcons name="toolbox" size={16} color="#7C3AED" />
+      <Text style={styles.inputLabel}>Teaching Resources</Text>
+    </View>
+    <View style={styles.textAreaContainer}>
+      <MaterialCommunityIcons 
+        name="bookmark-multiple" 
+        size={18} 
+        color="#7C3AED" 
+        style={styles.textAreaIcon} 
+      />
+      <TextInput
+        style={styles.textAreaInput}
+        placeholder="List resources separated by commas..."
+        placeholderTextColor="#9CA3AF"
+        multiline
+        textAlignVertical="top"
+        value={resources}
+        onChangeText={setResources}
+      />
+      {resources.length > 0 && (
+        <TouchableOpacity 
+          style={styles.clearTextAreaButton} 
+          onPress={() => setResources('')}
+        >
+          <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+        </TouchableOpacity>
+      )}
+    </View>
+  </View>
+
+  {/* PHASE 3: REFLECTION */}
+
+    <View style={styles.phaseHeader}>
+      <MaterialCommunityIcons name="mirror" size={20} color="#7C3AED" />
+      <Text style={styles.phaseTitle}>PHASE 3: REFLECTION ACTIVITIES</Text>
+    </View>
+    <View style={styles.textAreaContainer}>
+      <MaterialCommunityIcons 
+        name="thought-bubble" 
+        size={18} 
+        color="#7C3AED" 
+        style={styles.textAreaIcon} 
+      />
+      <TextInput
+        style={styles.textAreaInput}
+        placeholder="Enter reflection activities (one per line)..."
+        placeholderTextColor="#9CA3AF"
+        multiline
+        textAlignVertical="top"
+        value={reflectionActivities}
+        onChangeText={setReflectionActivities}
+      />
+      {reflectionActivities.length > 0 && (
+        <TouchableOpacity 
+          style={styles.clearTextAreaButton} 
+          onPress={() => setReflectionActivities('')}
+        >
+          <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+        </TouchableOpacity>
+      )}
+    </View>
+
+
+  {/* Assessment Section */}
+  <View style={styles.sectionHeader}>
+    <View style={styles.sectionTitleContainer}>
+      <MaterialCommunityIcons name="clipboard-check" size={22} color="#7C3AED" />
+      <Text style={styles.sectionTitle}>Assessment</Text>
+    </View>
+    <View style={styles.sectionDivider} />
+  </View>
+
+ 
+    <View style={styles.phaseHeader}>
+      <MaterialCommunityIcons name="chart-box" size={20} color="#7C3AED" />
+      <Text style={styles.phaseTitle}>ASSESSMENT QUESTIONS</Text>
+    </View>
+    <View style={styles.textAreaContainer}>
+      <MaterialCommunityIcons 
+        name="comment-question" 
+        size={18} 
+        color="#7C3AED" 
+        style={styles.textAreaIcon} 
+      />
+      <TextInput
+        style={styles.textAreaInput}
+        placeholder="Enter assessment questions (one per line)..."
+        placeholderTextColor="#9CA3AF"
+        multiline
+        textAlignVertical="top"
+        value={assessmentQuestions}
+        onChangeText={setAssessmentQuestions}
+      />
+      {assessmentQuestions.length > 0 && (
+        <TouchableOpacity 
+          style={styles.clearTextAreaButton} 
+          onPress={() => setAssessmentQuestions('')}
+        >
+          <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+        </TouchableOpacity>
+      )}
+  </View>
+</View>
 
       <View style={styles.actionRow}>
         <TouchableOpacity onPress={generateLessonNote} activeOpacity={0.9} style={styles.smallButton}>
@@ -1861,34 +2028,52 @@ Instructions:
       </LinearGradient>
       
       <View style={styles.tabBar}>
-        <TouchableOpacity 
-          style={[styles.tabItem, activeTab === 'create' && styles.activeTab]}
-          onPress={() => setActiveTab('create')}
-        >
-          <MaterialCommunityIcons 
-            name={activeTab === 'create' ? 'file-edit' : 'file-edit-outline'} 
-            size={24} 
-            color={activeTab === 'create' ? '#6366F1' : '#64748B'} 
-          />
-          <Text style={[styles.tabText, activeTab === 'create' && styles.activeTabText]}>
-            Create
-          </Text>
-        </TouchableOpacity>
+  <TouchableOpacity 
+    style={styles.tabItem}
+    onPress={() => setActiveTab('create')}
+  >
+    {activeTab === 'create' && <View/>}
+    <View style={[
+      styles.tabIconContainer,
+      activeTab === 'create' && styles.activeTabIconContainer
+    ]}>
+      <MaterialCommunityIcons 
+        name={activeTab === 'create' ? 'file-edit' : 'file-edit-outline'} 
+        size={24} 
+        color={activeTab === 'create' ? '#7C3AED' : '#64748B'} 
+      />
+    </View>
+    <Text style={[
+      styles.tabText, 
+      activeTab === 'create' && styles.activeTabText
+    ]}>
+      Create
+    </Text>
+  </TouchableOpacity>
 
-        <TouchableOpacity 
-          style={[styles.tabItem, activeTab === 'preview' && styles.activeTab]}
-          onPress={() => setActiveTab('preview')}
-        >
-          <MaterialCommunityIcons 
-            name={activeTab === 'preview' ? 'file-eye' : 'file-eye-outline'} 
-            size={24} 
-            color={activeTab === 'preview' ? '#6366F1' : '#64748B'} 
-          />
-          <Text style={[styles.tabText, activeTab === 'preview' && styles.activeTabText]}>
-            Preview
-          </Text>
-        </TouchableOpacity>
-      </View>
+  <TouchableOpacity 
+    style={styles.tabItem}
+    onPress={() => setActiveTab('preview')}
+  >
+    {activeTab === 'preview' && <View/>}
+    <View style={[
+      styles.tabIconContainer,
+      activeTab === 'preview' && styles.activeTabIconContainer
+    ]}>
+      <MaterialCommunityIcons 
+        name={activeTab === 'preview' ? 'file-eye' : 'file-eye-outline'} 
+        size={24} 
+        color={activeTab === 'preview' ? '#7C3AED' : '#64748B'} 
+      />
+    </View>
+    <Text style={[
+      styles.tabText, 
+      activeTab === 'preview' && styles.activeTabText
+    ]}>
+      Preview
+    </Text>
+  </TouchableOpacity>
+</View>
     </KeyboardAvoidingView>
   );
 }
@@ -2051,13 +2236,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 8,
   },
-  phaseTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#6366F1',
-    marginTop: 8,
-    marginBottom: 12,
-  },
   phaseHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -2074,7 +2252,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   aiGenButtonText: {
-    color: '#6366F1',
+    color: '#7C3AED',
     fontWeight: '700',
     fontSize: 12,
     marginLeft: 6,
@@ -2182,28 +2360,40 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: 'white',
-    borderTopWidth: 1,
-    borderTopColor: '#E2E8F0',
     height: 70,
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
+    shadowOffset: { width: 0, height: -5 },
     shadowOpacity: 0.1,
-    shadowRadius: 8,
+    shadowRadius: 10,
     elevation: 10,
+    paddingHorizontal: 20,
   },
   tabItem: {
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 8,
     flex: 1,
+    position: 'relative',
   },
   activeTab: {
-    borderTopWidth: 2,
-    borderTopColor: '#6366F1',
+    // Removed the border top style
+  },
+  tabIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  activeTabIconContainer: {
+    backgroundColor: '#EDE9FE',
   },
   tabText: {
     fontSize: 12,
@@ -2212,8 +2402,9 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   activeTabText: {
-    color: '#6366F1',
-  },
+    color: '#7C3AED',
+    fontWeight: '600',
+  },  
   previewContainer: {
     flex: 1,
     padding: 16,
@@ -2303,11 +2494,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#6366F1',
-    backgroundColor: '#6366F1',
+    borderColor: '#7C3AED',
+    backgroundColor: '#7C3AED',
   },
   pillText: {
-    color: '#6366F1',
+    color: '#7C3AED',
     fontWeight: '700',
     fontSize: 12,
     textAlign: 'center',
@@ -2320,14 +2511,14 @@ const styles = StyleSheet.create({
   },
   editButton: {
     marginTop: 8,
-    borderColor: '#6366F1',
+    borderColor: '#7C3AED',
     borderRadius: 8,
     paddingVertical: 16,
     borderWidth: 1,
     alignItems: 'center',
   },
   editButtonText: {
-    color: '#6366F1',
+    color: '#7C3AED',
     fontWeight: '600',
     fontSize: 16,
   },
@@ -2357,7 +2548,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   createButton: {
-    backgroundColor: '#6366F1',
+    backgroundColor: '#7C3AED',
     borderRadius: 8,
     paddingVertical: 16,
     paddingHorizontal: 32,
@@ -2368,6 +2559,241 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 16,
   },
+
+  headerContainer: {
+    marginBottom: 24,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  headerGradient: {
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
+  },
+  headerContent: {
+    alignItems: 'center',
+  },
+  headerIconContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    color: 'rgba(255, 255, 255, 0.8)',
+    textAlign: 'center',
+  },
+  headerCurve: {
+    position: 'absolute',
+    bottom: -40,
+    left: -50,
+    right: -50,
+    height: 40,
+    backgroundColor: '#F8FAFC',
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+    zIndex: 1,
+  },
+  sectionContainer: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  sectionHeader: {
+    marginBottom: 20,
+  },
+  sectionTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  sectionDivider: {
+    height: 3,
+    width: 50,
+    backgroundColor: '#7C3AED',
+    borderRadius: 3,
+    opacity: 0.5,
+  },
+  gridContainer: {
+    marginHorizontal: -8,
+  },
+  gridRow: {
+    flexDirection: 'row',
+    marginBottom: 16,
+  },
+  gridItem: {
+    flex: 1,
+    marginHorizontal: 8,
+  },
+  inputLabelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  inputLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#4B5563',
+    marginLeft: 6,
+  },
+  selectInput: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F9FAFB',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+  },
+  selectInputText: {
+    fontSize: 14,
+    color: '#1F2937',
+    flex: 1,
+    marginLeft: 8,
+  },
+  selectInputPlaceholder: {
+    fontSize: 14,
+    color: '#9CA3AF',
+    flex: 1,
+    marginLeft: 8,
+  },
+  inputIcon: {
+    marginRight: 4,
+  },
+  textInputContainer: {
+    position: 'relative',
+    justifyContent: 'center',
+    backgroundColor: '#F9FAFB',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 12,
+  },
+  textInput: {
+    paddingVertical: 12,
+    paddingLeft: 42,
+    paddingRight: 36,
+    fontSize: 14,
+    color: '#1F2937',
+  },
+  textInputIcon: {
+    position: 'absolute',
+    left: 14,
+    zIndex: 1,
+  },
+  clearInputButton: {
+    position: 'absolute',
+    right: 12,
+    padding: 4,
+  },
+  inputFieldContainer: {
+    marginBottom: 16,
+  },
+textAreaContainer: {
+  position: 'relative',
+  backgroundColor: '#F9FAFB',
+  borderWidth: 1,
+  borderColor: '#E5E7EB',
+  borderRadius: 12,
+  minHeight: 100,
+},
+  textAreaIcon: {
+    position: 'absolute',
+    left: 14,
+    top: 14,
+    zIndex: 1,
+  },
+  textAreaInput: {
+    paddingTop: 14,
+    paddingBottom: 14,
+    paddingLeft: 42,
+    paddingRight: 36,
+    fontSize: 14,
+    color: '#1F2937',
+    textAlignVertical: 'top',
+  },
+  clearTextAreaButton: {
+    position: 'absolute',
+    right: 12,
+    top: 14,
+    padding: 4,
+  },
+  phaseContainer: {
+    backgroundColor: '#F9FAFB',
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#EDE9FE',
+    marginBottom: 20, // Consistent spacing between phases
+  },
+  phaseHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+phaseHeaderLeft: {
+  flexDirection: 'row',
+  alignItems: 'center',
+},
+newLearningHeader: {
+  backgroundColor: '#F5F3FF',
+  padding: 10,
+  borderRadius: 8,
+  marginLeft: -10,
+  marginRight: -10,
+  marginTop: -10,
+  marginBottom: 10,
+},
+phaseTitle: {
+  fontSize: 17,
+  fontWeight: '700',
+  color: '#1F2937',
+  marginLeft: 8,
+  letterSpacing: 0.5,
+},
+aiButtonsContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+},
+aiButton: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  backgroundColor: '#EDE9FE',
+  paddingVertical: 6,
+  paddingHorizontal: 10,
+  borderRadius: 8,
+  marginRight: 8,
+},
+aiOptionsButton: {
+  backgroundColor: '#EDE9FE',
+  padding: 6,
+  borderRadius: 8,
+},
+aiButtonText: {
+  fontSize: 12,
+  fontWeight: '600',
+  color: '#7C3AED',
+  marginLeft: 4,
+},
 });
+
 
 Object.assign(styles, modalStyles);
