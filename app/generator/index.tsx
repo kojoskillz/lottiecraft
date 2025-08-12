@@ -605,10 +605,10 @@ Instructions:
       >
 <View style={styles.headerContainer}>
   <LinearGradient 
-    colors={['#7C3AED', '#8B5CF6']} 
+    colors={['#6366F1', '#8B5CF6']} 
     style={styles.headerGradient}
     start={{ x: 0, y: 0 }}
-    end={{ x: 1, y: 1 }}
+    end={{ x: 2, y: 2 }}
   >
     <View style={styles.headerContent}>
       <View style={styles.headerIconContainer}>
@@ -624,7 +624,7 @@ Instructions:
 <View style={styles.sectionContainer}>
   <View style={styles.sectionHeader}>
     <View style={styles.sectionTitleContainer}>
-      <Ionicons name="information-circle" size={22} color="#7C3AED" />
+      <Ionicons name="information-circle" size={22} color="#6366F1" />
       <Text style={styles.sectionTitle}>Basic Information</Text>
     </View>
     <View style={styles.sectionDivider} />
@@ -635,35 +635,35 @@ Instructions:
     <View style={styles.gridRow}>
       <View style={styles.gridItem}>
         <View style={styles.inputLabelContainer}>
-          <Ionicons name="school" size={16} color="#7C3AED" />
+          <Ionicons name="school" size={16} color="#6366F1" />
           <Text style={styles.inputLabel}>Academic Term</Text>
         </View>
         <TouchableOpacity 
           style={styles.selectInput} 
           onPress={() => setShowTermModal(true)}
         >
-          <Ionicons name="calendar" size={18} color="#7C3AED" style={styles.inputIcon} />
+          <Ionicons name="calendar" size={18} color="#6366F1" style={styles.inputIcon} />
           <Text style={term ? styles.selectInputText : styles.selectInputPlaceholder}>
             {term || 'Select term'}
           </Text>
-          <Ionicons name="chevron-down" size={16} color="#7C3AED" />
+          <Ionicons name="chevron-down" size={16} color="#6366F1" />
         </TouchableOpacity>
       </View>
 
       <View style={styles.gridItem}>
         <View style={styles.inputLabelContainer}>
-          <Ionicons name="time" size={16} color="#7C3AED" />
+          <Ionicons name="time" size={16} color="#6366F1" />
           <Text style={styles.inputLabel}>Week</Text>
         </View>
         <TouchableOpacity 
           style={styles.selectInput} 
           onPress={() => setShowWeekModal(true)}
         >
-          <Ionicons name="calendar-number" size={18} color="#7C3AED" style={styles.inputIcon} />
+          <Ionicons name="calendar-number" size={18} color="#6366F1" style={styles.inputIcon} />
           <Text style={week ? styles.selectInputText : styles.selectInputPlaceholder}>
             {week || 'Select week'}
           </Text>
-          <Ionicons name="chevron-down" size={16} color="#7C3AED" />
+          <Ionicons name="chevron-down" size={16} color="#6366F1" />
         </TouchableOpacity>
       </View>
     </View>
@@ -672,35 +672,35 @@ Instructions:
     <View style={styles.gridRow}>
       <View style={styles.gridItem}>
         <View style={styles.inputLabelContainer}>
-          <Ionicons name="flag" size={16} color="#7C3AED" />
+          <Ionicons name="flag" size={16} color="#6366F1" />
           <Text style={styles.inputLabel}>Week Ending</Text>
         </View>
         <TouchableOpacity 
           style={styles.selectInput} 
           onPress={toggleCalendar}
         >
-          <Ionicons name="calendar-outline" size={18} color="#7C3AED" style={styles.inputIcon} />
+          <Ionicons name="calendar-outline" size={18} color="#6366F1" style={styles.inputIcon} />
           <Text style={weekEnding ? styles.selectInputText : styles.selectInputPlaceholder}>
             {weekEnding || 'Select date'}
           </Text>
-          <Ionicons name="chevron-down" size={16} color="#7C3AED" />
+          <Ionicons name="chevron-down" size={16} color="#6366F1" />
         </TouchableOpacity>
       </View>
 
       <View style={styles.gridItem}>
         <View style={styles.inputLabelContainer}>
-          <Ionicons name="today" size={16} color="#7C3AED" />
+          <Ionicons name="today" size={16} color="#6366F1" />
           <Text style={styles.inputLabel}>Day</Text>
         </View>
         <TouchableOpacity 
           style={styles.selectInput} 
           onPress={() => setShowDayModal(true)}
         >
-          <Ionicons name="sunny" size={18} color="#7C3AED" style={styles.inputIcon} />
+          <Ionicons name="sunny" size={18} color="#6366F1" style={styles.inputIcon} />
           <Text style={day ? styles.selectInputText : styles.selectInputPlaceholder}>
             {day || 'Select day'}
           </Text>
-          <Ionicons name="chevron-down" size={16} color="#7C3AED" />
+          <Ionicons name="chevron-down" size={16} color="#6366F1" />
         </TouchableOpacity>
       </View>
     </View>
@@ -709,28 +709,28 @@ Instructions:
     <View style={styles.gridRow}>
       <View style={styles.gridItem}>
         <View style={styles.inputLabelContainer}>
-          <Ionicons name="book" size={16} color="#7C3AED" />
+          <Ionicons name="book" size={16} color="#6366F1" />
           <Text style={styles.inputLabel}>Subject</Text>
         </View>
         <TouchableOpacity 
           style={styles.selectInput} 
           onPress={() => setShowSubjectModal(true)}
         >
-          <Ionicons name="library" size={18} color="#7C3AED" style={styles.inputIcon} />
+          <Ionicons name="library" size={18} color="#6366F1" style={styles.inputIcon} />
           <Text style={subject ? styles.selectInputText : styles.selectInputPlaceholder}>
             {subject || 'Select subject'}
           </Text>
-          <Ionicons name="chevron-down" size={16} color="#7C3AED" />
+          <Ionicons name="chevron-down" size={16} color="#6366F1" />
         </TouchableOpacity>
       </View>
 
       <View style={styles.gridItem}>
         <View style={styles.inputLabelContainer}>
-          <Ionicons name="hourglass" size={16} color="#7C3AED" />
+          <Ionicons name="hourglass" size={16} color="#6366F1" />
           <Text style={styles.inputLabel}>Duration</Text>
         </View>
         <View style={styles.textInputContainer}>
-          <Ionicons name="time-outline" size={18} color="#7C3AED" style={styles.textInputIcon} />
+          <Ionicons name="time-outline" size={18} color="#6366F1" style={styles.textInputIcon} />
           <TextInput
             style={styles.textInput}
             placeholder="E.g. 45mins"
@@ -754,28 +754,28 @@ Instructions:
     <View style={styles.gridRow}>
       <View style={styles.gridItem}>
         <View style={styles.inputLabelContainer}>
-          <Ionicons name="people" size={16} color="#7C3AED" />
+          <Ionicons name="people" size={16} color="#6366F1" />
           <Text style={styles.inputLabel}>Class</Text>
         </View>
         <TouchableOpacity 
           style={styles.selectInput} 
           onPress={() => setShowClassModal(true)}
         >
-          <Ionicons name="school-outline" size={18} color="#7C3AED" style={styles.inputIcon} />
+          <Ionicons name="school-outline" size={18} color="#6366F1" style={styles.inputIcon} />
           <Text style={classLevel ? styles.selectInputText : styles.selectInputPlaceholder}>
             {classLevel || 'Select class'}
           </Text>
-          <Ionicons name="chevron-down" size={16} color="#7C3AED" />
+          <Ionicons name="chevron-down" size={16} color="#6366F1" />
         </TouchableOpacity>
       </View>
 
       <View style={styles.gridItem}>
         <View style={styles.inputLabelContainer}>
-          <Ionicons name="person" size={16} color="#7C3AED" />
+          <Ionicons name="person" size={16} color="#6366F1" />
           <Text style={styles.inputLabel}>Class Size</Text>
         </View>
         <View style={styles.textInputContainer}>
-          <Ionicons name="people-outline" size={18} color="#7C3AED" style={styles.textInputIcon} />
+          <Ionicons name="people-outline" size={18} color="#6366F1" style={styles.textInputIcon} />
           <TextInput
             style={styles.textInput}
             placeholder="E.g. 30"
@@ -800,14 +800,14 @@ Instructions:
     <View style={styles.gridRow}>
       <View style={styles.gridItem}>
         <View style={styles.inputLabelContainer}>
-          <MaterialCommunityIcons name="file-tree" size={16} color="#7C3AED" />
+          <MaterialCommunityIcons name="file-tree" size={16} color="#6366F1" />
           <Text style={styles.inputLabel}>Strand</Text>
         </View>
         <View style={styles.textInputContainer}>
           <MaterialCommunityIcons 
             name="file-tree" 
             size={18} 
-            color="#7C3AED" 
+            color="#6366F1" 
             style={styles.textInputIcon} 
           />
           <TextInput
@@ -830,14 +830,14 @@ Instructions:
 
       <View style={styles.gridItem}>
         <View style={styles.inputLabelContainer}>
-          <MaterialCommunityIcons name="file-tree-outline" size={16} color="#7C3AED" />
+          <MaterialCommunityIcons name="file-tree-outline" size={16} color="#6366F1" />
           <Text style={styles.inputLabel}>Sub-Strand</Text>
         </View>
         <View style={styles.textInputContainer}>
           <MaterialCommunityIcons 
             name="file-tree-outline" 
             size={18} 
-            color="#7C3AED" 
+            color="#6366F1" 
             style={styles.textInputIcon} 
           />
           <TextInput
@@ -864,7 +864,7 @@ Instructions:
 <View style={styles.sectionContainer}>
   <View style={styles.sectionHeader}>
     <View style={styles.sectionTitleContainer}>
-      <MaterialCommunityIcons name="file-document-edit" size={22} color="#7C3AED" />
+      <MaterialCommunityIcons name="file-document-edit" size={22} color="#6366F1" />
       <Text style={styles.sectionTitle}>Curriculum Standards</Text>
     </View>
     <View style={styles.sectionDivider} />
@@ -873,14 +873,14 @@ Instructions:
   {/* Content Standard */}
   <View style={styles.inputFieldContainer}>
     <View style={styles.inputLabelContainer}>
-      <MaterialCommunityIcons name="format-list-checks" size={16} color="#7C3AED" />
+      <MaterialCommunityIcons name="format-list-checks" size={16} color="#6366F1" />
       <Text style={styles.inputLabel}>Content Standard</Text>
     </View>
     <View style={styles.textAreaContainer}>
       <MaterialCommunityIcons 
         name="text-box" 
         size={18} 
-        color="#7C3AED" 
+        color="#6366F1" 
         style={styles.textAreaIcon} 
       />
       <TextInput
@@ -906,14 +906,14 @@ Instructions:
   {/* Indicator */}
   <View style={styles.inputFieldContainer}>
     <View style={styles.inputLabelContainer}>
-      <MaterialCommunityIcons name="chart-bar" size={16} color="#7C3AED" />
+      <MaterialCommunityIcons name="chart-bar" size={16} color="#6366F1" />
       <Text style={styles.inputLabel}>Indicator</Text>
     </View>
     <View style={styles.textAreaContainer}>
       <MaterialCommunityIcons 
         name="cursor-text" 
         size={18} 
-        color="#7C3AED" 
+        color="#6366F1" 
         style={styles.textAreaIcon} 
       />
       <TextInput
@@ -940,7 +940,7 @@ Instructions:
   <View style={styles.gridRow}>
     <View style={[styles.gridItem, { flex: 1 }]}>
       <View style={styles.inputLabelContainer}>
-        <MaterialCommunityIcons name="numeric" size={16} color="#7C3AED" />
+        <MaterialCommunityIcons name="numeric" size={16} color="#6366F1" />
         <Text style={styles.inputLabel}>Lesson Number</Text>
       </View>
       <TouchableOpacity 
@@ -950,13 +950,13 @@ Instructions:
         <MaterialCommunityIcons 
           name="format-list-numbered" 
           size={18} 
-          color="#7C3AED" 
+          color="#6366F1" 
           style={styles.inputIcon} 
         />
         <Text style={lessonNumber ? styles.selectInputText : styles.selectInputPlaceholder}>
           {lessonNumber || 'Select lesson number'}
         </Text>
-        <Ionicons name="chevron-down" size={16} color="#7C3AED" />
+        <Ionicons name="chevron-down" size={16} color="#6366F1" />
       </TouchableOpacity>
     </View>
   </View>
@@ -964,14 +964,14 @@ Instructions:
   {/* Performance Indicator */}
   <View style={styles.inputFieldContainer}>
     <View style={styles.inputLabelContainer}>
-      <MaterialCommunityIcons name="chart-line" size={16} color="#7C3AED" />
+      <MaterialCommunityIcons name="chart-line" size={16} color="#6366F1" />
       <Text style={styles.inputLabel}>Performance Indicator</Text>
     </View>
     <View style={styles.textAreaContainer}>
       <MaterialCommunityIcons 
         name="chart-areaspline" 
         size={18} 
-        color="#7C3AED" 
+        color="#6366F1" 
         style={styles.textAreaIcon} 
       />
       <TextInput
@@ -997,7 +997,7 @@ Instructions:
   {/* Core Competencies */}
   <View style={styles.inputFieldContainer}>
     <View style={styles.inputLabelContainer}>
-      <MaterialCommunityIcons name="brain" size={16} color="#7C3AED" />
+      <MaterialCommunityIcons name="brain" size={16} color="#6366F1" />
       <Text style={styles.inputLabel}>Core Competencies</Text>
     </View>
     <TouchableOpacity 
@@ -1007,27 +1007,27 @@ Instructions:
       <MaterialCommunityIcons 
         name="lightbulb-on" 
         size={18} 
-        color="#7C3AED" 
+        color="#6366F1" 
         style={styles.inputIcon} 
       />
       <Text style={coreCompetencies ? styles.selectInputText : styles.selectInputPlaceholder}>
         {coreCompetencies || 'Select core competency'}
       </Text>
-      <Ionicons name="chevron-down" size={16} color="#7C3AED" />
+      <Ionicons name="chevron-down" size={16} color="#6366F1" />
     </TouchableOpacity>
   </View>
 
   {/* References */}
   <View style={styles.inputFieldContainer}>
     <View style={styles.inputLabelContainer}>
-      <MaterialCommunityIcons name="book-open-variant" size={16} color="#7C3AED" />
+      <MaterialCommunityIcons name="book-open-variant" size={16} color="#6366F1" />
       <Text style={styles.inputLabel}>References</Text>
     </View>
     <View style={styles.textInputContainer}>
       <MaterialCommunityIcons 
         name="bookmark" 
         size={18} 
-        color="#7C3AED" 
+        color="#6366F1" 
         style={styles.textInputIcon} 
       />
       <TextInput
@@ -1053,7 +1053,7 @@ Instructions:
   {/* Lesson Phases Header */}
   <View style={styles.sectionHeader}>
     <View style={styles.sectionTitleContainer}>
-      <MaterialCommunityIcons name="progress-clock" size={22} color="#7C3AED" />
+      <MaterialCommunityIcons name="progress-clock" size={22} color="#6366F1" />
       <Text style={styles.sectionTitle}>Lesson Phases</Text>
     </View>
     <View style={styles.sectionDivider} />
@@ -1062,14 +1062,14 @@ Instructions:
   {/* PHASE 1: STARTER */}
 
     <View style={styles.phaseHeader}>
-      <MaterialCommunityIcons name="play-circle" size={20} color="#7C3AED" />
+      <MaterialCommunityIcons name="play-circle" size={20} color="#6366F1" />
       <Text style={styles.phaseTitle}>PHASE 1: STARTER ACTIVITIES</Text>
     </View>
     <View style={styles.textAreaContainer}>
       <MaterialCommunityIcons 
         name="lightning-bolt" 
         size={18} 
-        color="#7C3AED" 
+        color="#6366F1" 
         style={styles.textAreaIcon} 
       />
       <TextInput
@@ -1096,7 +1096,7 @@ Instructions:
 
     <View style={[styles.phaseHeader]}>
       <View style={styles.phaseHeaderLeft}>
-        <MaterialCommunityIcons name="book-education" size={20} color="#7C3AED" />
+        <MaterialCommunityIcons name="book-education" size={20} color="#6366F1" />
         <Text style={styles.phaseTitle}>PHASE 2: NEW LEARNING</Text>
       </View>
       <View style={styles.aiButtonsContainer}>
@@ -1106,10 +1106,10 @@ Instructions:
           disabled={isGeneratingNewLearning}
         >
           {isGeneratingNewLearning ? (
-            <ActivityIndicator size="small" color="#7C3AED" />
+            <ActivityIndicator size="small" color="#6366F1" />
           ) : (
             <>
-              <Ionicons name="sparkles" size={14} color="#7C3AED" />
+              <Ionicons name="sparkles" size={14} color="#6366F1" />
               <Text style={styles.aiButtonText}>Generate</Text>
             </>
           )}
@@ -1118,7 +1118,7 @@ Instructions:
           style={styles.aiOptionsButton} 
           onPress={() => setShowAIOptionsModal(true)}
         >
-          <Ionicons name="options" size={14} color="#7C3AED" />
+          <Ionicons name="options" size={14} color="#6366F1" />
         </TouchableOpacity>
       </View>
     </View>
@@ -1126,7 +1126,7 @@ Instructions:
       <MaterialCommunityIcons 
         name="brain" 
         size={18} 
-        color="#7C3AED" 
+        color="#6366F1" 
         style={styles.textAreaIcon} 
       />
       <TextInput
@@ -1152,14 +1152,14 @@ Instructions:
   {/* Resources */}
   <View style={styles.inputFieldContainer}>
     <View style={styles.inputLabelContainer}>
-      <MaterialCommunityIcons name="toolbox" size={16} color="#7C3AED" />
+      <MaterialCommunityIcons name="toolbox" size={16} color="#6366F1" />
       <Text style={styles.inputLabel}>Teaching Resources</Text>
     </View>
     <View style={styles.textAreaContainer}>
       <MaterialCommunityIcons 
         name="bookmark-multiple" 
         size={18} 
-        color="#7C3AED" 
+        color="#6366F1" 
         style={styles.textAreaIcon} 
       />
       <TextInput
@@ -1185,14 +1185,14 @@ Instructions:
   {/* PHASE 3: REFLECTION */}
 
     <View style={styles.phaseHeader}>
-      <MaterialCommunityIcons name="mirror" size={20} color="#7C3AED" />
+      <MaterialCommunityIcons name="mirror" size={20} color="#6366F1" />
       <Text style={styles.phaseTitle}>PHASE 3: REFLECTION ACTIVITIES</Text>
     </View>
     <View style={styles.textAreaContainer}>
       <MaterialCommunityIcons 
         name="thought-bubble" 
         size={18} 
-        color="#7C3AED" 
+        color="#6366F1" 
         style={styles.textAreaIcon} 
       />
       <TextInput
@@ -1218,7 +1218,7 @@ Instructions:
   {/* Assessment Section */}
   <View style={styles.sectionHeader}>
     <View style={styles.sectionTitleContainer}>
-      <MaterialCommunityIcons name="clipboard-check" size={22} color="#7C3AED" />
+      <MaterialCommunityIcons name="clipboard-check" size={22} color="#6366F1" />
       <Text style={styles.sectionTitle}>Assessment</Text>
     </View>
     <View style={styles.sectionDivider} />
@@ -1226,14 +1226,14 @@ Instructions:
 
  
     <View style={styles.phaseHeader}>
-      <MaterialCommunityIcons name="chart-box" size={20} color="#7C3AED" />
+      <MaterialCommunityIcons name="chart-box" size={20} color="#6366F1" />
       <Text style={styles.phaseTitle}>ASSESSMENT QUESTIONS</Text>
     </View>
     <View style={styles.textAreaContainer}>
       <MaterialCommunityIcons 
         name="comment-question" 
         size={18} 
-        color="#7C3AED" 
+        color="#6366F1" 
         style={styles.textAreaIcon} 
       />
       <TextInput
@@ -2101,7 +2101,7 @@ Instructions:
       activeTab === 'create' && styles.activeTabIconContainer
     ]}>
       <LinearGradient
-        colors={activeTab === 'create' ? ['#7C3AED', '#8B5CF6'] : ['transparent', 'transparent']}
+        colors={activeTab === 'create' ? ['#6366F1', '#8B5CF6'] : ['transparent', 'transparent']}
         style={styles.tabIconGradient}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
@@ -2132,7 +2132,7 @@ Instructions:
       activeTab === 'preview' && styles.activeTabIconContainer
     ]}>
       <LinearGradient
-        colors={activeTab === 'preview' ? ['#7C3AED', '#8B5CF6'] : ['transparent', 'transparent']}
+        colors={activeTab === 'preview' ? ['#6366F1', '#8B5CF6'] : ['transparent', 'transparent']}
         style={styles.tabIconGradient}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
@@ -2331,7 +2331,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   aiGenButtonText: {
-    color: '#7C3AED',
+    color: '#6366F1',
     fontWeight: '700',
     fontSize: 12,
     marginLeft: 6,
@@ -2476,7 +2476,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   activeTabIconContainer: {
-    shadowColor: '#7C3AED',
+    shadowColor: '#6366F1',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -2491,7 +2491,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   activeTabText: {
-    color: '#7C3AED',
+    color: '#6366F1',
     fontWeight: '700',
   },
   activeTabIndicator: {
@@ -2500,7 +2500,7 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#7C3AED',
+    backgroundColor: '#6366F1',
   },
   previewContainer: {
     flex: 1,
@@ -2591,11 +2591,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#7C3AED',
-    backgroundColor: '#7C3AED',
+    borderColor: '#6366F1',
+    backgroundColor: '#6366F1',
   },
   pillText: {
-    color: '#7C3AED',
+    color: '#6366F1',
     fontWeight: '700',
     fontSize: 12,
     textAlign: 'center',
@@ -2608,14 +2608,14 @@ const styles = StyleSheet.create({
   },
   editButton: {
     marginTop: 8,
-    borderColor: '#7C3AED',
+    borderColor: '#6366F1',
     borderRadius: 8,
     paddingVertical: 16,
     borderWidth: 1,
     alignItems: 'center',
   },
   editButtonText: {
-    color: '#7C3AED',
+    color: '#6366F1',
     fontWeight: '600',
     fontSize: 16,
   },
@@ -2645,7 +2645,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   createButton: {
-    backgroundColor: '#7C3AED',
+    backgroundColor: '#6366F1',
     borderRadius: 8,
     paddingVertical: 16,
     paddingHorizontal: 32,
@@ -2725,7 +2725,7 @@ const styles = StyleSheet.create({
   sectionDivider: {
     height: 3,
     width: 50,
-    backgroundColor: '#7C3AED',
+    backgroundColor: '#6366F1',
     borderRadius: 3,
     opacity: 0.5,
   },
@@ -2887,9 +2887,13 @@ aiOptionsButton: {
 aiButtonText: {
   fontSize: 12,
   fontWeight: '600',
-  color: '#7C3AED',
+  color: '#6366F1',
   marginLeft: 4,
 },
+assessmentContainer: {
+  marginBottom: 300, // Gives extra space when keyboard appears
+  paddingBottom: 50, // Additional padding
+}
 });
 
 
