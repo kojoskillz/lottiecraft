@@ -68,6 +68,5 @@ const styles = StyleSheet.create({
   logoImage: {
     width: '100%',
     height: '100%',
-    // Remove tintColor to show original logo colors
   },
 });
