@@ -795,6 +795,69 @@ Instructions:
         </View>
       </View>
     </View>
+
+    {/* Row 5 - Strand and Sub-Strand */}
+    <View style={styles.gridRow}>
+      <View style={styles.gridItem}>
+        <View style={styles.inputLabelContainer}>
+          <MaterialCommunityIcons name="file-tree" size={16} color="#7C3AED" />
+          <Text style={styles.inputLabel}>Strand</Text>
+        </View>
+        <View style={styles.textInputContainer}>
+          <MaterialCommunityIcons 
+            name="file-tree" 
+            size={18} 
+            color="#7C3AED" 
+            style={styles.textInputIcon} 
+          />
+          <TextInput
+            style={styles.textInput}
+            placeholder="Enter strand..."
+            placeholderTextColor="#9CA3AF"
+            value={strand}
+            onChangeText={setStrand}
+          />
+          {strand.length > 0 && (
+            <TouchableOpacity 
+              style={styles.clearInputButton} 
+              onPress={() => setStrand('')}
+            >
+              <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+
+      <View style={styles.gridItem}>
+        <View style={styles.inputLabelContainer}>
+          <MaterialCommunityIcons name="file-tree-outline" size={16} color="#7C3AED" />
+          <Text style={styles.inputLabel}>Sub-Strand</Text>
+        </View>
+        <View style={styles.textInputContainer}>
+          <MaterialCommunityIcons 
+            name="file-tree-outline" 
+            size={18} 
+            color="#7C3AED" 
+            style={styles.textInputIcon} 
+          />
+          <TextInput
+            style={styles.textInput}
+            placeholder="Enter sub-strand..."
+            placeholderTextColor="#9CA3AF"
+            value={subStrand}
+            onChangeText={setSubStrand}
+          />
+          {subStrand.length > 0 && (
+            <TouchableOpacity 
+              style={styles.clearInputButton} 
+              onPress={() => setSubStrand('')}
+            >
+              <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+    </View>
   </View>
 </View>
 
@@ -2028,20 +2091,27 @@ Instructions:
       </LinearGradient>
       
       <View style={styles.tabBar}>
+  {/* Create Tab */}
   <TouchableOpacity 
     style={styles.tabItem}
     onPress={() => setActiveTab('create')}
   >
-    {activeTab === 'create' && <View/>}
     <View style={[
       styles.tabIconContainer,
       activeTab === 'create' && styles.activeTabIconContainer
     ]}>
-      <MaterialCommunityIcons 
-        name={activeTab === 'create' ? 'file-edit' : 'file-edit-outline'} 
-        size={24} 
-        color={activeTab === 'create' ? '#7C3AED' : '#64748B'} 
-      />
+      <LinearGradient
+        colors={activeTab === 'create' ? ['#7C3AED', '#8B5CF6'] : ['transparent', 'transparent']}
+        style={styles.tabIconGradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      >
+        <MaterialCommunityIcons 
+          name="file-edit-outline" 
+          size={24} 
+          color={activeTab === 'create' ? 'white' : '#94A3B8'} 
+        />
+      </LinearGradient>
     </View>
     <Text style={[
       styles.tabText, 
@@ -2049,22 +2119,30 @@ Instructions:
     ]}>
       Create
     </Text>
+    {activeTab === 'create' && <View style={styles.activeTabIndicator}/>}
   </TouchableOpacity>
 
+  {/* Preview Tab */}
   <TouchableOpacity 
     style={styles.tabItem}
     onPress={() => setActiveTab('preview')}
   >
-    {activeTab === 'preview' && <View/>}
     <View style={[
       styles.tabIconContainer,
       activeTab === 'preview' && styles.activeTabIconContainer
     ]}>
-      <MaterialCommunityIcons 
-        name={activeTab === 'preview' ? 'file-eye' : 'file-eye-outline'} 
-        size={24} 
-        color={activeTab === 'preview' ? '#7C3AED' : '#64748B'} 
-      />
+      <LinearGradient
+        colors={activeTab === 'preview' ? ['#7C3AED', '#8B5CF6'] : ['transparent', 'transparent']}
+        style={styles.tabIconGradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      >
+        <MaterialCommunityIcons 
+          name="file-eye-outline" 
+          size={24} 
+          color={activeTab === 'preview' ? 'white' : '#94A3B8'} 
+        />
+      </LinearGradient>
     </View>
     <Text style={[
       styles.tabText, 
@@ -2072,6 +2150,7 @@ Instructions:
     ]}>
       Preview
     </Text>
+    {activeTab === 'preview' && <View style={styles.activeTabIndicator}/>}
   </TouchableOpacity>
 </View>
     </KeyboardAvoidingView>
@@ -2358,53 +2437,71 @@ const styles = StyleSheet.create({
   tabBar: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     backgroundColor: 'white',
-    height: 70,
+    height: 80,
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: -5 },
+    shadowOffset: { width: 0, height: -8 },
     shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 10,
+    shadowRadius: 12,
+    elevation: 15,
     paddingHorizontal: 20,
+    paddingTop: 12,
   },
   tabItem: {
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 8,
+    justifyContent: 'flex-start',
     flex: 1,
     position: 'relative',
   },
-  activeTab: {
-    // Removed the border top style
-  },
   tabIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'transparent',
+    marginBottom: 4,
+  },
+  tabIconGradient: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   activeTabIconContainer: {
-    backgroundColor: '#EDE9FE',
+    shadowColor: '#7C3AED',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
   tabText: {
     fontSize: 12,
-    color: '#64748B',
-    fontWeight: '500',
-    marginTop: 4,
+    color: '#94A3B8',
+    fontWeight: '600',
+    marginTop: 2,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   activeTabText: {
     color: '#7C3AED',
-    fontWeight: '600',
-  },  
+    fontWeight: '700',
+  },
+  activeTabIndicator: {
+    position: 'absolute',
+    top: -6,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#7C3AED',
+  },
   previewContainer: {
     flex: 1,
     padding: 16,
