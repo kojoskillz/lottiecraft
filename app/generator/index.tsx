@@ -2083,8 +2083,8 @@ Instructions:
   return (
     <KeyboardAvoidingView 
       style={styles.mainContainer}
-      behavior={Platform.OS === 'ios' ? 'padding' : null}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 70 : 0}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
     >
       <LinearGradient colors={['#F8FAFC', '#EFF6FF']} style={styles.container}>
         {renderContent()}
