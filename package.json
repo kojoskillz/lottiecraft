@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "dotenv -e .env -- expo start",
-    "build": "expo build:web",
-    "serve": "serve -s web-build",
+    "build": "npx expo export:web",
+    "serve": "serve dist",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "dotenv -e .env -- expo start --android",
     "ios": "dotenv -e .env -- expo start --ios",
