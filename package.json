@@ -8,7 +8,9 @@
     "android": "dotenv -e .env -- expo start --android",
     "ios": "dotenv -e .env -- expo start --ios",
     "web": "dotenv -e .env -- expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "build": "expo build:web",
+    "start": "serve -s web-build"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.1",
