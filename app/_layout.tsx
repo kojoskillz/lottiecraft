@@ -5,7 +5,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import React, { useEffect, useState } from 'react';
-import { useColorScheme, View, ActivityIndicator } from 'react-native';
+import { useColorScheme, View, StyleSheet, Animated, Image, Easing } from 'react-native';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -14,21 +14,51 @@ export default function RootLayout() {
     SpaceGrotesk_700Bold,
   });
   const [appReady, setAppReady] = useState(false);
-  const [splashAnimationComplete, setSplashAnimationComplete] = useState(false);
+  
+  // Animation values
+  const fadeAnim = React.useRef(new Animated.Value(0)).current;
+  const scaleAnim = React.useRef(new Animated.Value(0.5)).current;
 
   useEffect(() => {
     if (fontsLoaded) {
-      // Simulate loading process (replace with actual async tasks if needed)
+      // Start animations
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 1500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleAnim, {
+          toValue: 1,
+          duration: 1000,
+          easing: Easing.out(Easing.back(1.5)),
+          useNativeDriver: true,
+        })
+      ]).start();
+
+      // Set app ready after animation completes
       setTimeout(() => {
         setAppReady(true);
-      }, 2000); // 2 second splash screen
+      }, 2000);
     }
   }, [fontsLoaded]);
 
   if (!fontsLoaded || !appReady) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#6366F1' }}>
-        <ActivityIndicator size="large" color="white" />
+      <View style={styles.container}>
+        <Animated.View style={[
+          styles.logoContainer,
+          {
+            opacity: fadeAnim,
+            transform: [{ scale: scaleAnim }]
+          }
+        ]}>
+          <Image 
+            source={require('../assets/images/lottiecraftlogo.png')}
+            style={styles.logoImage}
+            resizeMode="contain"
+          />
+        </Animated.View>
       </View>
     );
   }
@@ -45,3 +75,22 @@ export default function RootLayout() {
     </ThemeProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFFFF',
+  },
+  logoContainer: {
+    width: 80,
+    height: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logoImage: {
+    width: '100%',
+    height: '100%',
+  },
+});
