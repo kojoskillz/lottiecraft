@@ -3,13 +3,15 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "start": "dotenv -e .env -- expo start  serve -s web-build",
+    "start": "dotenv -e .env -- expo start",
+    "build": "expo build:web",
+    "serve": "serve -s web-build",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "dotenv -e .env -- expo start --android",
     "ios": "dotenv -e .env -- expo start --ios",
     "web": "dotenv -e .env -- expo start --web",
-    "lint": "expo lint",
-  },
+    "lint": "expo lint"
+},
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.1",
     "@expo-google-fonts/manrope": "^0.4.1",
