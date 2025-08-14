@@ -38,20 +38,24 @@ const subjects = [
   { id: '6', name: 'Social Studies' },
   { id: '7', name: 'RME' },
   { id: '8', name: 'Ghanaian Language' },
-  { id: '9', name: 'OWOP' },
+  { id: '9', name: 'Our World and Our People' },
   { id: '10', name: 'History' },
+  { id: '11', name: 'Numeracy' },
+  { id: '12', name: 'Language and Literacy' },
 ];
 
 const classLevels = [
-  { id: '1', name: 'Basic 1' },
-  { id: '2', name: 'Basic 2' },
-  { id: '3', name: 'Basic 3' },
-  { id: '4', name: 'Basic 4' },
-  { id: '5', name: 'Basic 5' },
-  { id: '6', name: 'Basic 6' },
-  { id: '7', name: 'Basic 7' },
-  { id: '8', name: 'Basic 8' },
-  { id: '9', name: 'Basic 9' },
+  { id: '1', name: 'KG 1' }, 
+  { id: '2', name: 'KG 2' }, 
+  { id: '3', name: 'Basic 1' },
+  { id: '4', name: 'Basic 2' },
+  { id: '5', name: 'Basic 3' },
+  { id: '6', name: 'Basic 4' },
+  { id: '7', name: 'Basic 5' },
+  { id: '8', name: 'Basic 6' },
+  { id: '9', name: 'Basic 7' },
+  { id: '10', name: 'Basic 8' },
+  { id: '11', name: 'Basic 9' },
 ];
 
 const coreCompetenciesList = [
@@ -65,6 +69,11 @@ const coreCompetenciesList = [
   { id: '8', name: 'Financial Literacy & Entrepreneurship' },
   { id: '9', name: 'Leadership & Personal Development' },
   { id: '10', name: 'Environmental Stewardship' },
+  { id: '11', name: 'Gross Motor Skills Development' },
+  { id: '12', name: 'Fine Motor Skills Development' },
+  { id: '13', name: 'Social-Emotional Learning' },
+  { id: '14', name: 'Early Language Acquisition' },
+  { id: '15', name: 'Sensory Exploration' }
 ];
 
 const lessonNumbers = [
@@ -285,6 +294,18 @@ export default function GeneratorScreen() {
     setGeneratedLesson(lesson);
     setActiveTab('preview');
   };
+
+  const kgResources = classLevel.includes('KG') 
+  ? [
+      "Picture cards",
+      "Storybooks",
+      "Counting objects (beans, blocks)",
+      "Playdough",
+      "Art materials (crayons, paper)",
+      "Musical instruments",
+      "Real objects for exploration"
+    ].join(', ')
+  : '';
 
   const normalizeActivitiesText = (raw: string) => {
     return raw
