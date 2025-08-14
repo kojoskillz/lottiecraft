@@ -6,7 +6,7 @@
     "start": "dotenv -e .env -- expo start",
     "build": "expo export --platform web",
     "serve": "serve dist -p $PORT",
-     "web": "expo start --web"
+     "web": "expo start --web",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "dotenv -e .env -- expo start --android",
     "ios": "dotenv -e .env -- expo start --ios",
