@@ -4,12 +4,12 @@
   "version": "1.0.0",
   "scripts": {
     "start": "dotenv -e .env -- expo start",
-    "build": "npx expo export:web",
-    "serve": "serve dist",
+    "build": "expo export --platform web",
+    "serve": "serve dist -p $PORT",
+     "web": "expo start --web"
     "reset-project": "node ./scripts/reset-project.js",
     "android": "dotenv -e .env -- expo start --android",
     "ios": "dotenv -e .env -- expo start --ios",
-    "web": "dotenv -e .env -- expo start --web",
     "lint": "expo lint"
   },
   "dependencies": {
