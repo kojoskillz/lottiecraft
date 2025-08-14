@@ -43,7 +43,7 @@ export default function SplashScreen() {
         }
       ]}>
         <Image 
-          source={require('../assets/images/lottiecraft.png')}
+          source={require('../assets/images/lottiecraftlogo.png')}
           style={styles.logoImage}
           resizeMode="contain"
         />
