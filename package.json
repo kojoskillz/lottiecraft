@@ -11,7 +11,7 @@
     "ios": "dotenv -e .env -- expo start --ios",
     "web": "dotenv -e .env -- expo start --web",
     "lint": "expo lint"
-},
+  },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.1",
     "@expo-google-fonts/manrope": "^0.4.1",
@@ -52,7 +52,7 @@
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
     "react-native-share": "^12.2.0",
-    "react-native-web": "~0.20.0",
+    "react-native-web": "^0.20.0",
     "react-native-webview": "13.13.5"
   },
   "devDependencies": {
@@ -61,6 +61,7 @@
     "dotenv-cli": "^10.0.0",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
+    "serve": "^14.2.4",
     "typescript": "~5.8.3"
   },
   "private": true
