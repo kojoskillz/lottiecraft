@@ -73,7 +73,32 @@ const coreCompetenciesList = [
   { id: '12', name: 'Fine Motor Skills Development' },
   { id: '13', name: 'Social-Emotional Learning' },
   { id: '14', name: 'Early Language Acquisition' },
-  { id: '15', name: 'Sensory Exploration' }
+  { id: '15', name: 'Sensory Exploration' },
+  { id: '16', name: 'Cultural Awareness & Tolerance' },
+  { id: '17', name: 'Peace Education & Conflict Resolution' },
+  { id: '18', name: 'Health & Well-being' },
+  { id: '19', name: 'Safety & Security Awareness' },
+  { id: '20', name: 'Research Skills & Information Literacy' },
+  { id: '21', name: 'Adaptability & Resilience' },
+  { id: '22', name: 'Time Management & Organization' },
+  { id: '23', name: 'Ethical Decision Making' },
+  { id: '24', name: 'Media Literacy' },
+  { id: '25', name: 'Civic Responsibility' },
+  { id: '26', name: 'Scientific Inquiry' },
+  { id: '27', name: 'Artistic Expression' },
+  { id: '28', name: 'Musical Appreciation & Expression' },
+  { id: '29', name: 'Dramatic Expression' },
+  { id: '30', name: 'Physical Fitness & Coordination' },
+  { id: '31', name: 'Nutritional Awareness' },
+  { id: '32', name: 'Gender Sensitivity & Equality' },
+  { id: '33', name: 'Human Rights Awareness' },
+  { id: '34', name: 'Sustainable Development Awareness' },
+  { id: '35', name: 'Agricultural Practices' },
+  { id: '36', name: 'Technological Proficiency' },
+  { id: '37', name: 'Entrepreneurial Mindset' },
+  { id: '38', name: 'Community Engagement' },
+  { id: '39', name: 'Traditional Knowledge & Values' },
+  { id: '40', name: 'Life Skills & Self-reliance' }
 ];
 
 const lessonNumbers = [
