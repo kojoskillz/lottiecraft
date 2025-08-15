@@ -172,6 +172,9 @@ export default function GeneratorScreen() {
   const [resources, setResources] = useState('');
   const [assessmentQuestions, setAssessmentQuestions] = useState('');
   const [isGeneratingNewLearning, setIsGeneratingNewLearning] = useState(false);
+  const [isGeneratingStarter, setIsGeneratingStarter] = useState(false);
+  const [isGeneratingReflection, setIsGeneratingReflection] = useState(false);
+  const [isGeneratingAssessment, setIsGeneratingAssessment] = useState(false);
   const [showAIOptionsModal, setShowAIOptionsModal] = useState(false);
   const [showModelModal, setShowModelModal] = useState(false);
   const [aiTone, setAiTone] = useState<'Simple' | 'Engaging' | 'Rigorous'>('Engaging');
@@ -180,6 +183,7 @@ export default function GeneratorScreen() {
   const [aiModel, setAiModel] = useState<string>('gpt-4o-mini');
   const [term, setTerm] = useState('');
   const [week, setWeek] = useState('');
+
 
   const [showCalendar, setShowCalendar] = useState(false);
   const [activeTab, setActiveTab] = useState('create');
@@ -315,6 +319,97 @@ export default function GeneratorScreen() {
       .join('\n');
   };
 
+
+  const generateStarterWithAI = async () => {
+    try {
+      if (!subject.trim() || !classLevel.trim() || !subStrand.trim()) {
+        Alert.alert('Missing info', 'Please provide at least Subject, Class, and Sub-Strand to generate activities.');
+        return;
+      }
+      
+      const groqKey = process.env.EXPO_PUBLIC_GROQ_API_KEY as string | undefined;
+      const openaiKey = process.env.EXPO_PUBLIC_OPENAI_API_KEY as string | undefined;
+      const usingGroq = Boolean(groqKey);
+      const usingOpenAI = !usingGroq && Boolean(openaiKey);
+      if (!usingGroq && !usingOpenAI) {
+        Alert.alert('Missing API key', 'Set EXPO_PUBLIC_GROQ_API_KEY (recommended, free tier) or EXPO_PUBLIC_OPENAI_API_KEY before starting the app.');
+        return;
+      }
+  
+      setIsGeneratingStarter(true);
+  
+      const systemPrompt = 'You are an expert primary school lesson planner. Generate engaging, interactive starter activities for PHASE 1: STARTER. Keep activities short, fun, and relevant to the lesson topic.';
+      const userPrompt = `Create PHASE 1: STARTER activities.
+  Context:
+  - Term: ${term || '-'}
+  - Week: ${week || '-'}
+  - Week Ending: ${weekEnding || '-'}
+  - Day: ${day || '-'}
+  - Subject: ${subject}
+  - Class: ${classLevel || '-'} (Class Size: ${classSize || '-'})
+  - Duration: ${duration || '-'}
+  - Strand: ${strand || '-'}
+  - Sub-Strand/Topic: ${subStrand}
+  - Content Standard: ${contentStandard || '-'}
+  - Indicator: ${indicator || '-'}
+  - Performance Indicator: ${performanceIndicator || '-'}
+  - Core Competencies: ${coreCompetencies || '-'}
+  - Available Resources: ${resources || '-'}
+  
+  Instructions:
+  - Tone: ${aiTone}
+  - Produce exactly ${aiCount} specific activities for the STARTER phase.
+  - Activities should be 3-5 minutes each
+  - Use clear, simple sentences. 
+  - Incorporate movement or interaction where appropriate.
+  - If resources are provided, use them.
+  - Output format: Only the activities, one per line, no numbering or bullets.`;
+  
+      const baseUrl = usingGroq ? 'https://api.groq.com/openai/v1/chat/completions' : 'https://api.openai.com/v1/chat/completions';
+      let chosenModel = aiModel;
+      if (usingGroq && /^gpt/i.test(chosenModel)) {
+        chosenModel = 'llama3-8b-8192';
+      }
+      if (usingOpenAI && /^llama/i.test(chosenModel)) {
+        chosenModel = 'gpt-4o-mini';
+      }
+      
+      const authToken = usingGroq ? groqKey! : openaiKey!;
+      const resp = await fetch(baseUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          model: chosenModel,
+          temperature: aiTemperature,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt },
+          ],
+        }),
+      });
+  
+      if (!resp.ok) {
+        const errText = await resp.text();
+        throw new Error(errText || `Request failed: ${resp.status}`);
+      }
+      const data = await resp.json();
+      const content = data?.choices?.[0]?.message?.content || '';
+      const normalized = normalizeActivitiesText(content);
+      if (!normalized) {
+        Alert.alert('No content', 'AI did not return any activities. Please try again.');
+      }
+      setStarterActivities(normalized);
+    } catch (e) {
+      console.error('AI generation error:', e);
+      Alert.alert('AI Error', 'Failed to generate activities. Please try again.');
+    } finally {
+      setIsGeneratingStarter(false);
+    }
+  };
+
   const generateNewLearningWithAI = async () => {
     try {
       if (!subject.trim() || !classLevel.trim() || !subStrand.trim()) {
@@ -405,6 +500,189 @@ Instructions:
       setIsGeneratingNewLearning(false);
     }
   };
+
+  const generateReflectionWithAI = async () => {
+    try {
+      if (!subject.trim() || !classLevel.trim() || !subStrand.trim()) {
+        Alert.alert('Missing info', 'Please provide at least Subject, Class, and Sub-Strand to generate activities.');
+        return;
+      }
+      
+      const groqKey = process.env.EXPO_PUBLIC_GROQ_API_KEY as string | undefined;
+      const openaiKey = process.env.EXPO_PUBLIC_OPENAI_API_KEY as string | undefined;
+      const usingGroq = Boolean(groqKey);
+      const usingOpenAI = !usingGroq && Boolean(openaiKey);
+      if (!usingGroq && !usingOpenAI) {
+        Alert.alert('Missing API key', 'Set EXPO_PUBLIC_GROQ_API_KEY (recommended, free tier) or EXPO_PUBLIC_OPENAI_API_KEY before starting the app.');
+        return;
+      }
+  
+      setIsGeneratingReflection(true);
+  
+      const systemPrompt = 'You are an expert primary school lesson planner. Generate meaningful reflection activities for PHASE 3: REFLECTION. Focus on helping students consolidate their learning and assess their understanding.';
+      const userPrompt = `Create PHASE 3: REFLECTION activities.
+  Context:
+  - Term: ${term || '-'}
+  - Week: ${week || '-'}
+  - Week Ending: ${weekEnding || '-'}
+  - Day: ${day || '-'}
+  - Subject: ${subject}
+  - Class: ${classLevel || '-'} (Class Size: ${classSize || '-'})
+  - Duration: ${duration || '-'}
+  - Strand: ${strand || '-'}
+  - Sub-Strand/Topic: ${subStrand}
+  - Content Standard: ${contentStandard || '-'}
+  - Indicator: ${indicator || '-'}
+  - Performance Indicator: ${performanceIndicator || '-'}
+  - Core Competencies: ${coreCompetencies || '-'}
+  - Available Resources: ${resources || '-'}
+  - Starter Activities: ${starterActivities || '-'}
+  - New Learning Activities: ${newLearningActivities || '-'}
+  
+  Instructions:
+  - Tone: ${aiTone}
+  - Produce exactly ${aiCount} specific activities for the REFLECTION phase.
+  - Activities should help students reflect on what they learned
+  - Include self-assessment and peer-sharing where appropriate
+  - Connect back to the lesson objectives
+  - Use clear, simple sentences.
+  - If resources are provided, use them.
+  - Output format: Only the activities, one per line, no numbering or bullets.`;
+  
+      const baseUrl = usingGroq ? 'https://api.groq.com/openai/v1/chat/completions' : 'https://api.openai.com/v1/chat/completions';
+      let chosenModel = aiModel;
+      if (usingGroq && /^gpt/i.test(chosenModel)) {
+        chosenModel = 'llama3-8b-8192';
+      }
+      if (usingOpenAI && /^llama/i.test(chosenModel)) {
+        chosenModel = 'gpt-4o-mini';
+      }
+      
+      const authToken = usingGroq ? groqKey! : openaiKey!;
+      const resp = await fetch(baseUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          model: chosenModel,
+          temperature: aiTemperature,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt },
+          ],
+        }),
+      });
+  
+      if (!resp.ok) {
+        const errText = await resp.text();
+        throw new Error(errText || `Request failed: ${resp.status}`);
+      }
+      const data = await resp.json();
+      const content = data?.choices?.[0]?.message?.content || '';
+      const normalized = normalizeActivitiesText(content);
+      if (!normalized) {
+        Alert.alert('No content', 'AI did not return any activities. Please try again.');
+      }
+      setReflectionActivities(normalized);
+    } catch (e) {
+      console.error('AI generation error:', e);
+      Alert.alert('AI Error', 'Failed to generate activities. Please try again.');
+    } finally {
+      setIsGeneratingReflection(false);
+    }
+  };
+
+  const generateAssessmentWithAI = async () => {
+    try {
+      if (!subject.trim() || !classLevel.trim() || !subStrand.trim()) {
+        Alert.alert('Missing info', 'Please provide at least Subject, Class, and Sub-Strand to generate assessment questions.');
+        return;
+      }
+      
+      const groqKey = process.env.EXPO_PUBLIC_GROQ_API_KEY as string | undefined;
+      const openaiKey = process.env.EXPO_PUBLIC_OPENAI_API_KEY as string | undefined;
+      const usingGroq = Boolean(groqKey);
+      const usingOpenAI = !usingGroq && Boolean(openaiKey);
+      if (!usingGroq && !usingOpenAI) {
+        Alert.alert('Missing API key', 'Set EXPO_PUBLIC_GROQ_API_KEY (recommended, free tier) or EXPO_PUBLIC_OPENAI_API_KEY before starting the app.');
+        return;
+      }
+  
+      setIsGeneratingAssessment(true);
+  
+      const systemPrompt = 'You are an expert primary school teacher. Create appropriate assessment questions that evaluate student understanding of the lesson content.';
+      const userPrompt = `Create assessment questions for the lesson.
+  Context:
+  - Term: ${term || '-'}
+  - Week: ${week || '-'}
+  - Subject: ${subject}
+  - Class: ${classLevel || '-'}
+  - Strand: ${strand || '-'}
+  - Sub-Strand/Topic: ${subStrand}
+  - Content Standard: ${contentStandard || '-'}
+  - Indicator: ${indicator || '-'}
+  - Performance Indicator: ${performanceIndicator || '-'}
+  - Core Competencies: ${coreCompetencies || '-'}
+  - Starter Activities: ${starterActivities || '-'}
+  - New Learning Activities: ${newLearningActivities || '-'}
+  - Reflection Activities: ${reflectionActivities || '-'}
+  
+  Instructions:
+  - Tone: ${aiTone}
+  - Produce exactly ${aiCount} assessment questions
+  - Include a mix of question types (recall, application, analysis)
+  - Questions should be age-appropriate for ${classLevel}
+  - Align with the lesson objectives and activities
+  - Use clear, simple language
+  - Output format: Only the questions, one per line, no numbering or bullets.`;
+  
+      const baseUrl = usingGroq ? 'https://api.groq.com/openai/v1/chat/completions' : 'https://api.openai.com/v1/chat/completions';
+      let chosenModel = aiModel;
+      if (usingGroq && /^gpt/i.test(chosenModel)) {
+        chosenModel = 'llama3-8b-8192';
+      }
+      if (usingOpenAI && /^llama/i.test(chosenModel)) {
+        chosenModel = 'gpt-4o-mini';
+      }
+      
+      const authToken = usingGroq ? groqKey! : openaiKey!;
+      const resp = await fetch(baseUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          model: chosenModel,
+          temperature: aiTemperature,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt },
+          ],
+        }),
+      });
+  
+      if (!resp.ok) {
+        const errText = await resp.text();
+        throw new Error(errText || `Request failed: ${resp.status}`);
+      }
+      const data = await resp.json();
+      const content = data?.choices?.[0]?.message?.content || '';
+      const normalized = normalizeActivitiesText(content);
+      if (!normalized) {
+        Alert.alert('No content', 'AI did not return any questions. Please try again.');
+      }
+      setAssessmentQuestions(normalized);
+    } catch (e) {
+      console.error('AI generation error:', e);
+      Alert.alert('AI Error', 'Failed to generate assessment questions. Please try again.');
+    } finally {
+      setIsGeneratingAssessment(false);
+    }
+  };
+
 
   const generateHTML = () => {
     if (!generatedLesson) return '';
@@ -1081,36 +1359,59 @@ Instructions:
   </View>
 
   {/* PHASE 1: STARTER */}
-
-    <View style={styles.phaseHeader}>
-      <MaterialCommunityIcons name="play-circle" size={20} color="#6366F1" />
-      <Text style={styles.phaseTitle}>PHASE 1: STARTER ACTIVITIES</Text>
-    </View>
-    <View style={styles.textAreaContainer}>
-      <MaterialCommunityIcons 
-        name="lightning-bolt" 
-        size={18} 
-        color="#6366F1" 
-        style={styles.textAreaIcon} 
-      />
-      <TextInput
-        style={styles.textAreaInput}
-        placeholder="Enter starter activities (one per line)..."
-        placeholderTextColor="#9CA3AF"
-        multiline
-        textAlignVertical="top"
-        value={starterActivities}
-        onChangeText={setStarterActivities}
-      />
-      {starterActivities.length > 0 && (
-        <TouchableOpacity 
-          style={styles.clearTextAreaButton} 
-          onPress={() => setStarterActivities('')}
-        >
-          <Ionicons name="close-circle" size={18} color="#9CA3AF" />
-        </TouchableOpacity>
+<View style={[styles.phaseHeader]}>
+  <View style={styles.phaseHeaderLeft}>
+    <MaterialCommunityIcons name="play-circle" size={20} color="#6366F1" />
+    <Text style={styles.phaseTitle}>PHASE 1: STARTER ACTIVITIES</Text>
+  </View>
+  <View style={styles.aiButtonsContainer}>
+    <TouchableOpacity 
+      style={styles.aiButton} 
+      onPress={generateStarterWithAI} 
+      disabled={isGeneratingStarter}
+    >
+      {isGeneratingStarter ? (
+        <ActivityIndicator size="small" color="#6366F1" />
+      ) : (
+        <>
+          <Ionicons name="sparkles" size={14} color="#6366F1" />
+          <Text style={styles.aiButtonText}>Generate</Text>
+        </>
       )}
-    </View>
+    </TouchableOpacity>
+    <TouchableOpacity 
+      style={styles.aiOptionsButton} 
+      onPress={() => setShowAIOptionsModal(true)}
+    >
+      <Ionicons name="options" size={14} color="#6366F1" />
+    </TouchableOpacity>
+  </View>
+</View>
+<View style={styles.textAreaContainer}>
+  <MaterialCommunityIcons 
+    name="lightning-bolt" 
+    size={18} 
+    color="#6366F1" 
+    style={styles.textAreaIcon} 
+  />
+  <TextInput
+    style={styles.textAreaInput}
+    placeholder="Enter starter activities (one per line)..."
+    placeholderTextColor="#9CA3AF"
+    multiline
+    textAlignVertical="top"
+    value={starterActivities}
+    onChangeText={setStarterActivities}
+  />
+  {starterActivities.length > 0 && (
+    <TouchableOpacity 
+      style={styles.clearTextAreaButton} 
+      onPress={() => setStarterActivities('')}
+    >
+      <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+    </TouchableOpacity>
+  )}
+</View>
 
 
   {/* PHASE 2: NEW LEARNING */}
@@ -1204,77 +1505,123 @@ Instructions:
   </View>
 
   {/* PHASE 3: REFLECTION */}
-
-    <View style={styles.phaseHeader}>
-      <MaterialCommunityIcons name="mirror" size={20} color="#6366F1" />
-      <Text style={styles.phaseTitle}>PHASE 3: REFLECTION ACTIVITIES</Text>
-    </View>
-    <View style={styles.textAreaContainer}>
-      <MaterialCommunityIcons 
-        name="thought-bubble" 
-        size={18} 
-        color="#6366F1" 
-        style={styles.textAreaIcon} 
-      />
-      <TextInput
-        style={styles.textAreaInput}
-        placeholder="Enter reflection activities (one per line)..."
-        placeholderTextColor="#9CA3AF"
-        multiline
-        textAlignVertical="top"
-        value={reflectionActivities}
-        onChangeText={setReflectionActivities}
-      />
-      {reflectionActivities.length > 0 && (
-        <TouchableOpacity 
-          style={styles.clearTextAreaButton} 
-          onPress={() => setReflectionActivities('')}
-        >
-          <Ionicons name="close-circle" size={18} color="#9CA3AF" />
-        </TouchableOpacity>
-      )}
-    </View>
-
-
-  {/* Assessment Section */}
-  <View style={styles.sectionHeader}>
-    <View style={styles.sectionTitleContainer}>
-      <MaterialCommunityIcons name="clipboard-check" size={22} color="#6366F1" />
-      <Text style={styles.sectionTitle}>Assessment</Text>
-    </View>
-    <View style={styles.sectionDivider} />
+<View style={[styles.phaseHeader]}>
+  <View style={styles.phaseHeaderLeft}>
+    <MaterialCommunityIcons name="mirror" size={20} color="#6366F1" />
+    <Text style={styles.phaseTitle}>PHASE 3: REFLECTION ACTIVITIES</Text>
   </View>
-
- 
-    <View style={styles.phaseHeader}>
-      <MaterialCommunityIcons name="chart-box" size={20} color="#6366F1" />
-      <Text style={styles.phaseTitle}>ASSESSMENT QUESTIONS</Text>
-    </View>
-    <View style={styles.textAreaContainer}>
-      <MaterialCommunityIcons 
-        name="comment-question" 
-        size={18} 
-        color="#6366F1" 
-        style={styles.textAreaIcon} 
-      />
-      <TextInput
-        style={styles.textAreaInput}
-        placeholder="Enter assessment questions (one per line)..."
-        placeholderTextColor="#9CA3AF"
-        multiline
-        textAlignVertical="top"
-        value={assessmentQuestions}
-        onChangeText={setAssessmentQuestions}
-      />
-      {assessmentQuestions.length > 0 && (
-        <TouchableOpacity 
-          style={styles.clearTextAreaButton} 
-          onPress={() => setAssessmentQuestions('')}
-        >
-          <Ionicons name="close-circle" size={18} color="#9CA3AF" />
-        </TouchableOpacity>
+  <View style={styles.aiButtonsContainer}>
+    <TouchableOpacity 
+      style={styles.aiButton} 
+      onPress={generateReflectionWithAI} 
+      disabled={isGeneratingReflection}
+    >
+      {isGeneratingReflection ? (
+        <ActivityIndicator size="small" color="#6366F1" />
+      ) : (
+        <>
+          <Ionicons name="sparkles" size={14} color="#6366F1" />
+          <Text style={styles.aiButtonText}>Generate</Text>
+        </>
       )}
+    </TouchableOpacity>
+    <TouchableOpacity 
+      style={styles.aiOptionsButton} 
+      onPress={() => setShowAIOptionsModal(true)}
+    >
+      <Ionicons name="options" size={14} color="#6366F1" />
+    </TouchableOpacity>
   </View>
+</View>
+<View style={styles.textAreaContainer}>
+  <MaterialCommunityIcons 
+    name="thought-bubble" 
+    size={18} 
+    color="#6366F1" 
+    style={styles.textAreaIcon} 
+  />
+  <TextInput
+    style={styles.textAreaInput}
+    placeholder="Enter reflection activities (one per line)..."
+    placeholderTextColor="#9CA3AF"
+    multiline
+    textAlignVertical="top"
+    value={reflectionActivities}
+    onChangeText={setReflectionActivities}
+  />
+  {reflectionActivities.length > 0 && (
+    <TouchableOpacity 
+      style={styles.clearTextAreaButton} 
+      onPress={() => setReflectionActivities('')}
+    >
+      <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+    </TouchableOpacity>
+  )}
+</View>
+
+
+ {/* Assessment Section */}
+<View style={styles.sectionHeader}>
+  <View style={styles.sectionTitleContainer}>
+    <MaterialCommunityIcons name="clipboard-check" size={22} color="#6366F1" />
+    <Text style={styles.sectionTitle}>Assessment</Text>
+  </View>
+  <View style={styles.sectionDivider} />
+</View>
+
+<View style={[styles.phaseHeader]}>
+  <View style={styles.phaseHeaderLeft}>
+    <MaterialCommunityIcons name="chart-box" size={20} color="#6366F1" />
+    <Text style={styles.phaseTitle}>ASSESSMENT QUESTIONS</Text>
+  </View>
+  <View style={styles.aiButtonsContainer}>
+    <TouchableOpacity 
+      style={styles.aiButton} 
+      onPress={generateAssessmentWithAI} 
+      disabled={isGeneratingAssessment}
+    >
+      {isGeneratingAssessment ? (
+        <ActivityIndicator size="small" color="#6366F1" />
+      ) : (
+        <>
+          <Ionicons name="sparkles" size={14} color="#6366F1" />
+          <Text style={styles.aiButtonText}>Generate</Text>
+        </>
+      )}
+    </TouchableOpacity>
+    <TouchableOpacity 
+      style={styles.aiOptionsButton} 
+      onPress={() => setShowAIOptionsModal(true)}
+    >
+      <Ionicons name="options" size={14} color="#6366F1" />
+    </TouchableOpacity>
+  </View>
+</View>
+<View style={styles.textAreaContainer}>
+  <MaterialCommunityIcons 
+    name="comment-question" 
+    size={18} 
+    color="#6366F1" 
+    style={styles.textAreaIcon} 
+  />
+  <TextInput
+    style={styles.textAreaInput}
+    placeholder="Enter assessment questions (one per line)..."
+    placeholderTextColor="#9CA3AF"
+    multiline
+    textAlignVertical="top"
+    value={assessmentQuestions}
+    onChangeText={setAssessmentQuestions}
+  />
+  {assessmentQuestions.length > 0 && (
+    <TouchableOpacity 
+      style={styles.clearTextAreaButton} 
+      onPress={() => setAssessmentQuestions('')}
+    >
+      <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+    </TouchableOpacity>
+  )}
+</View>
 </View>
 
       <View style={styles.actionRow}>
