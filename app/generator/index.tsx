@@ -3259,8 +3259,8 @@ aiButtonText: {
   marginLeft: 4,
 },
 assessmentContainer: {
-  marginBottom: 300, // Gives extra space when keyboard appears
-  paddingBottom: 50, // Additional padding
+  marginBottom: 300, 
+  paddingBottom: 50, 
 }
 });
 
